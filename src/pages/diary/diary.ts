@@ -22,7 +22,7 @@ export class DiaryPage {
 
   ionViewDidLoad() {
 
-    console.log('ionViewDidLoad DiaryPage');
+    console.log('ionViewoad DiaryPage');
   }
 
 }
