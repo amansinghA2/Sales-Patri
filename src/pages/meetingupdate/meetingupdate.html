@@ -1,0 +1,134 @@
+<!--
+  Generated template for the MeetingupdatePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+
+<ion-header>
+  <ion-navbar hideBackButton color="purplecolor">
+    <ion-buttons start>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title *ngIf="item.activity_type == 'Meeting'"> MEETING UPDATE</ion-title>
+    <ion-title *ngIf="item.activity_type == 'Call'"> CALL UPDATE</ion-title>
+    <ion-buttons end>
+        <button (click)="showNotifications()" id="notification-button" ion-button icon-only>
+            <ion-icon name="notifications">
+                <ion-badge id="notifications-badge" color="danger">{{notificationList.length}}</ion-badge>
+            </ion-icon>
+        </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content scroll="true" class="appbackcolor">
+
+  <ion-card>
+    <ion-card>
+      <ion-segment [(ngModel)]="options" color="appbackgroundcolor">
+        <ion-segment-button value="attended" ngSelected="selected">
+          ATTENDED
+        </ion-segment-button>
+        <ion-segment-button value="cancelpostpone">
+          CANCEL/POSTPONE
+        </ion-segment-button>
+      </ion-segment>
+    </ion-card>
+  </ion-card>
+
+  <ion-card [ngSwitch]="options">
+    <ion-list *ngSwitchCase="'attended'">
+      <ion-item>
+        <ion-title *ngIf="item.activity_type == 'Meeting'"> MINUTES OF MEETING</ion-title>
+        <ion-title *ngIf="item.activity_type == 'Call'"> MINUTES OF CALL</ion-title>
+      </ion-item>
+      <ion-item>
+        <ion-textarea placeholder="Description" [(ngModel)]="outputdescriptiontext"></ion-textarea>
+      </ion-item>
+      <ion-item>
+        <ion-label> OUTPUT TYPE</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-row>
+          <!-- [ngClass]="{'isSelected': !whichtypeArray[i]['selected']}" -->
+          <ion-col *ngFor="let type of whichtypeArray;let i = index" (click)="whichTypeClicked(type)" class="lfdgsqboxcss" [ngClass]="{active: isActive(type)}">
+            <b> {{type}} </b>
+          </ion-col>
+        </ion-row>
+      </ion-item>
+      <hr>
+      <ion-item>
+        <ion-label> NEXT ACTION / FOLLOW UP</ion-label>
+      </ion-item>
+      <ion-item no-lines>
+        <ion-row no-padding>
+          <ion-col col-7>
+            <button (click)="scheduleMeeting()" ion-button [style.background]="meetingbuttoncolor">{{meetingbuttontext}}</button>
+          </ion-col>
+          <ion-col col-5>
+            <button (click)="scheduleCall()" ion-button [style.background]="callbuttoncolor">{{callbuttontext}}</button>
+          </ion-col>
+        </ion-row>
+      </ion-item>
+      <ion-item no-lines text-center>
+        OR
+      </ion-item>
+    </ion-list>
+    <ion-list *ngSwitchCase="'cancelpostpone'">
+      <ion-item>
+        <ion-label item-left>
+          <b>REASON FOR CANCELLING/POSTPONING:</b>
+        </ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>Select</ion-label>
+        <ion-select [(ngModel)]="whichtype">
+          <ion-option *ngFor="let item of cancellingReasons" [value]="item">{{item}}</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label item-left>
+          <b>REMARKS: </b>
+        </ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-textarea placeholder="Description" [(ngModel)]="descriptiontext"></ion-textarea>
+      </ion-item>
+      <ion-item>
+        <ion-label> OUTPUT TYPE</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-row>
+          <!-- [ngClass]="{'isSelected': !whichtypeArray[i]['selected']}" -->
+          <ion-col *ngFor="let type of whichtypeArray;let i = index" (click)="whichTypeClicked(type)" class="lfdgsqboxcss" [ngClass]="{active: isActive(type)}">
+            <b> {{type}} </b>
+          </ion-col>
+        </ion-row>
+      </ion-item>
+
+      <ion-item no-lines text-center>
+        <button text-center (click)="reSchedule()" ion-button color="purplecolor" padding>RESCHEDULE</button>
+      </ion-item>
+
+      <ion-item no-lines text-center>
+        OR
+      </ion-item>
+      <!-- <ion-item>
+        <ion-input placeholder="RESCHEDULE" [(ngModel)]="scheduleText"></ion-input>
+      </ion-item> -->
+    </ion-list>
+
+    <div text-center class="footerbottomargin">
+      <button (click)="updateCancelSubmitCalled()" ion-button color="purplecolor" danger><b>Submit</b></button>
+    </div>
+
+  </ion-card>
+
+</ion-content>
+
+<floating-button> </floating-button>
+<footerbar></footerbar>

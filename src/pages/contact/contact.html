@@ -1,0 +1,154 @@
+<!--
+  Generated template for the ContactPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar hideBackButton color="purplecolor">
+    <ion-buttons start>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>
+      ADD CONTACT
+    </ion-title>
+    <ion-buttons end>
+      <button (click)="showNotifications()" id="notification-button" ion-button icon-only>
+        <ion-icon name="notifications">
+          <ion-badge id="notifications-badge" color="danger">{{notificationList.length}}</ion-badge>
+        </ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+
+  <form novalidate (ngSubmit)="onSubmit(user)" [formGroup]="user">
+
+    <ion-item>
+      <ion-label class="labelfonts" floating>Person Name *</ion-label>
+      <ion-input type="text" value="" formControlName="name" class="answerfonts"></ion-input>
+    </ion-item>
+
+    <ion-item no-lines *ngIf="( user.get('name').hasError('minlength') || user.get('name').hasError('required') ) && user.get('name').touched">
+
+      <div class="error answerfonts" *ngIf="user.get('name').hasError('required') && user.get('name').touched">
+        Name is required
+      </div>
+      <div class="error answerfonts" *ngIf="user.get('name').hasError('minlength') && user.get('name').touched">
+        Minimum of 4 characters
+      </div>
+    </ion-item>
+
+    <ion-item>
+      <ion-label class="labelfonts" floating>Email *</ion-label>
+      <ion-input type="text" value="" formControlName="email" class="answerfonts"></ion-input>
+
+    </ion-item>
+
+    <ion-item no-lines *ngIf="( user.get('email').hasError('required') || user.get('email').hasError('email') ) && user.get('email').touched">
+      <div class="error answerfonts" *ngIf="user.get('email').hasError('required') && user.get('email').touched">
+        email is required
+      </div>
+      <div class="error answerfonts" *ngIf="user.get('email').hasError('email') && user.get('email').touched">
+        Please enter valid email
+      </div>
+    </ion-item>
+
+
+
+    <ion-item>
+      <ion-label class="labelfonts" floating>Mobile No *</ion-label>
+      <ion-input type="text" value="" formControlName="mob" minlength=10 maxlength=10 class="answerfonts"></ion-input>
+
+    </ion-item>
+
+    <ion-item no-lines *ngIf="( user.get('mob').hasError('required') || user.get('mob').hasError('minlength') || user.get('mob').hasError('maxlength'))&& user.get('mob').touched">
+
+      <div class="error answerfonts" *ngIf="user.get('mob').hasError('required') && user.get('email').touched">
+        mobile no is required
+      </div>
+      <div class="error answerfonts" *ngIf="user.get('mob').hasError('minlength') && user.get('email').touched">
+        Please enter valid mobile number
+      </div>
+
+      <div class="error answerfonts" *ngIf="user.get('mob').hasError('maxlength') && user.get('email').touched">
+        Please enter valid mobile number
+      </div>
+
+    </ion-item>
+
+    <ion-item>
+      <ion-label class="labelfonts" floating>DOB *</ion-label>
+      <ion-datetime displayFormat="MM/DD/YYYY" formControlName="dob" class="answerfonts" text-left></ion-datetime>
+    </ion-item>
+
+    <ion-item no-lines *ngIf="(user.get('dob').hasError('required')) && user.get('dob').touched">
+
+      <div class="error answerfonts" *ngIf="user.get('dob').hasError('required') && user.get('dob').touched">
+        DOB is required
+      </div>
+    </ion-item>
+
+    <ion-row no-padding  >
+      <ion-col >
+        <ion-searchbar no-padding  formControlName="meetaddr" (ionInput)="updateSearchResults()" placeholder="Search for default Meeting Address *" class="answerfonts"></ion-searchbar>
+        <ion-list [hidden]="autocompleteItems.length == 0" >
+                  <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)" class="ionitema">
+                    {{ item.description }}
+                  </ion-item>
+           </ion-list>
+        </ion-col>
+    </ion-row>
+
+    <!-- <ion-item>
+      <ion-label class="labelfonts" >Meeting Address *</ion-label>
+      <ion-searchbar no-padding [(ngModel)]="address" formControlName="meetaddr" (ionInput)="updateSearchResults()" placeholder="Search for a place" class="answerfonts"></ion-searchbar>
+    </ion-item> -->
+
+   <ion-item no-lines *ngIf="(user.get('meetaddr').hasError('required')) && user.get('meetaddr').touched">
+
+      <div class="error answerfonts" *ngIf="user.get('meetaddr').hasError('required') && user.get('meetaddr').touched">
+       Default Meeting Address is required
+      </div>
+    </ion-item>
+
+  </form>
+
+  <div text-center class="footerbottomargin">
+    <button ion-button [disabled]="user.invalid" (click)="submitEvent()" color="purplecolor" class="buttoncss">Submit</button>
+  </div>
+
+  <!-- <ion-item>
+    <ion-label floating>Person Name*</ion-label>
+    <ion-input type="text" [(ngModel)]="personname"  ></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>Email Address*</ion-label>
+    <ion-input type="text" [(ngModel)]="emailaddress" ></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>Mobile Number*</ion-label>
+    <ion-input type="text" [(ngModel)]="mobilenumber" minlength=10 maxlength=10></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>DOB*</ion-label>
+    <ion-input type="text" [(ngModel)]="dateofbirth"></ion-input>
+  </ion-item>
+
+  <div text-center class="footerbottomargin">
+      <button (click)="submitEvent()" ion-button color="purplecolor" danger>Submit</button>
+  </div> -->
+
+</ion-content>
+
+
+<floating-button> </floating-button>
+<footerbar> </footerbar>

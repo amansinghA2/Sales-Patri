@@ -1,0 +1,83 @@
+<!--
+  Generated template for the SourcelistPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+    <ion-navbar hideBackButton color="purplecolor">
+        <ion-buttons start>
+            <button ion-button menuToggle >
+                <ion-icon name="menu"></ion-icon>
+              </button>
+          </ion-buttons>
+          <ion-title>
+              SOURCE LIST
+          </ion-title>
+          <ion-buttons end>
+              <button (click)="showNotifications()" id="notification-button" ion-button icon-only>
+                  <ion-icon name="notifications">
+                      <ion-badge id="notifications-badge" color="danger">{{notificationList.length}}</ion-badge>
+                  </ion-icon>
+              </button>
+          </ion-buttons>
+    </ion-navbar>
+  </ion-header>
+
+
+<ion-content no-pading class="appbackcolor">
+  <!-- <ion-card no-padding class="ioncardcss"> -->
+    <div no-padding *ngIf="sourceListArray.length != 0" >
+      <div no-padding *ngFor="let list of sourceListArray" (click)="sourceClicked(list)" class="sourceleadlistdesign" no-padding>
+       <ion-row no-padding >
+        <ion-col col-4 no-padding>
+            <b>Name : </b>
+        </ion-col>
+        <ion-col col-6 no-padding>
+            {{list.source_name}} 
+          </ion-col>
+       </ion-row>
+       <ion-row no-padding>
+          <ion-col col-4 no-padding>
+              <b>Category : </b>
+          </ion-col>
+          <ion-col col-6 no-padding>
+              <span *ngIf="list.source_sub_type != ''"> {{list.source_sub_type}}</span> 
+              <span *ngIf="list.source_sub_type == ''"> - </span>  <br>
+            </ion-col>
+        </ion-row>
+        <ion-row no-padding>
+            <ion-col col-4 no-padding>
+                <b> Type : </b> 
+            </ion-col>
+            <ion-col col-6 no-padding>
+                {{list.source_type}}
+              </ion-col>
+         </ion-row>
+        <!-- <ion-col col-8>
+          <b>Name : </b> <br>
+          <span *ngIf="list.source_sub_type != ''"> <b>Category : </b> {{list.source_sub_type}}</span> <span *ngIf="list.source_sub_type == ''"> <b>Category : </b> - </span>  <br>
+          <b> Type : </b> {{list.source_type}}<br>
+        </ion-col>
+        <ion-col>
+            {{list.source_name}} 
+        </ion-col> -->
+        <!-- <ion-col col-1>
+            <div class="vl"></div>
+        </ion-col>
+        <ion-col col-3 class="sourcefont">
+         <b> Next Action :<br>
+          Call  </b> 
+        </ion-col> -->
+        <!-- <hr>
+        <br> -->
+      </div>
+      <hr>
+    </div>
+
+  <!-- </ion-card> -->
+
+</ion-content>
+
+<floating-button> </floating-button>
+<footerbar> </footerbar>

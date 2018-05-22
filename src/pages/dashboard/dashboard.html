@@ -1,0 +1,388 @@
+<ion-header>
+  <ion-navbar hideBackButton color="purplecolor">
+    <ion-buttons start>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>
+      DASHBOARD
+    </ion-title>
+    <ion-buttons end>
+      <button (click)="showNotifications()" id="notification-button" ion-button icon-only>
+        <ion-icon name="notifications">
+          <ion-badge id="notifications-badge" color="danger">{{notificationList.length}}</ion-badge>
+        </ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content no-bounce class="appbackcolor">
+  <ion-card class="datediv" no-padding>
+    <ion-row class="datedivpadding">
+      <ion-col padding col-2>
+        <i class="datecalendarcolor" class="fas fa-calendar fa-2x"></i>
+      </ion-col>
+      <ion-col no-padding col-5>
+        <ion-item class="datediv">
+          <ion-label class="dateleftpadding datelabelfont" style="color:black" no-padding floating>From</ion-label>
+          <ion-datetime displayFormat="DD MMM YYYY" no-padding [(ngModel)]="myDateFrom" (ionChange)="fromDateData()" [min]="2000" [max]="2099"
+            class="labelfonts"></ion-datetime>
+        </ion-item>
+      </ion-col>
+      <ion-col no-padding col-5>
+        <ion-item class="datediv">
+          <ion-label class="dateleftpadding datelabelfont" style="color:black" no-padding floating>To</ion-label>
+          <ion-datetime displayFormat="DD MMM YYYY" [(ngModel)]="myDateTo" no-padding (ionChange)="toDateData()" [min]="myDateFrom"
+            [max]="2099" class="labelfonts"></ion-datetime>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-card>
+
+  <ion-card class="ioncardcss" no-padding>
+    <ion-card>
+      <ion-segment [(ngModel)]="options" color="appbackgroundcolor">
+        <ion-segment-button value="myschedule" ngSelected="selected">
+          MY SCHEDULE
+        </ion-segment-button>
+        <ion-segment-button value="mydiary">
+          MY DIARY
+        </ion-segment-button>
+      </ion-segment>
+    </ion-card>
+
+    <hr>
+
+    <div [ngSwitch]="options" no-padding class="footerbottomargin">
+      <div *ngSwitchCase="'myschedule'">
+        <ion-card class="ioncardcss">
+          <ion-row text-center>
+            <ion-col *ngFor="let p of clickList" (click)="allDataList(p)" [style.color]="p.color">
+              <!-- <ion-icon name={{p.icon}}></ion-icon> -->
+              <i class="{{p.icon}}"></i>
+              <br>
+              <label style="font-size: 3vw">{{p.title}}({{p.count}}) </label>
+            </ion-col>
+          </ion-row>
+        </ion-card>
+        <div *ngIf="pgn != 4">
+          <div *ngFor="let item of listStatus;let i = index">
+            <div *ngIf="item == 'SCHEDULED' ">
+              <ion-label style="padding-left:10vw">
+                <b>{{item}} ({{countArray[0]}}) </b>
+              </ion-label>
+
+              <ion-list *ngFor="let item of recordsList;let i = index" no-padding>
+                <div no-padding *ngIf="item.activity_output_end_datetime > currenTime && item.next_activity_id == '' && (item.activity_status == 'OPEN' || item.activity_status == 'POSTPONE')"
+                  (click)="itemClicked(item)" class="listdesign" no-padding>
+
+                  <img *ngIf="item.activity_scheduled_type === 'L' && item.activity_type === 'Meeting' " src="assets/icon/L_blue2.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'F' && item.activity_type === 'Meeting' " src="assets/icon/F_blue2.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'D' && item.activity_type === 'Meeting' " src="assets/icon/D_blue2.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'G' && item.activity_type === 'Meeting' " src="assets/icon/D_blue2.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'S' && item.activity_type === 'Meeting' " src="assets/icon/S_blue2.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'Q' && item.activity_type === 'Meeting' " src="assets/icon/S_blue2.png" alt=""
+                    class="dashlisticonimg">
+
+                  <img *ngIf="item.activity_scheduled_type === 'L' && item.activity_type === 'Call' " src="assets/icon/L_green1.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'F' && item.activity_type === 'Call' " src="assets/icon/F_green1.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'D' && item.activity_type === 'Call' " src="assets/icon/D_green1.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'G' && item.activity_type === 'Call' " src="assets/icon/D_green1.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'S' && item.activity_type === 'Call' " src="assets/icon/S_green1.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'Q' && item.activity_type === 'Call' " src="assets/icon/S_green1.png" alt=""
+                    class="dashlisticonimg">
+
+                  <img *ngIf="item.activity_scheduled_type === 'L' && item.activity_type === 'To-Do' " src="assets/icon/L_orange3.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'F' && item.activity_type === 'To-Do' " src="assets/icon/F_orange3.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'D' && item.activity_type === 'To-Do' " src="assets/icon/D_orange3.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'G' && item.activity_type === 'To-Do' " src="assets/icon/G_orange3.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'S' && item.activity_type === 'To-Do' " src="assets/icon/S_orange3.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'Q' && item.activity_type === 'To-Do' " src="assets/icon/Q_orange3.png" alt=""
+                    class="dashlisticonimg">
+
+                  <ion-row no-padding>
+                    <ion-col col-7 style="left:-30px" no-padding>
+                      <span class="listfontcolor"> {{item.activity_person_name}}</span>
+                      <br>
+                      <span class="listfontcolor"> Source : -</span>
+                      <br>
+                      <span class="listfontcolor">{{item.activity_output_end_datetime}}
+                      </span>
+                    </ion-col>
+                    <ion-col col-5>
+                      <button (click)="lastCallDetails()" class="calldetailsbuttoncss ">
+                        <ion-icon name="call"> </ion-icon> Last Call Details </button>
+                    </ion-col>
+                  </ion-row>
+                </div>
+              </ion-list>
+            </div>
+
+            <div *ngIf="item == 'MISSED'">
+              <ion-label style="padding-left:10vw">
+                <b>{{item}} ({{countArray[1]}}) </b>
+              </ion-label>
+              <ion-list *ngFor="let item of recordsList;let i = index" no-padding>
+                <div no-padding *ngIf="item.activity_output_end_datetime <= currenTime && item.next_activity_id == '' && (item.activity_status == 'OPEN' || item.activity_status == 'POSTPONE')"
+                  (click)="itemClicked(item)" class="listdesign" no-padding>
+
+                  <img *ngIf="item.activity_scheduled_type === 'L' && item.activity_type === 'Meeting' " src="assets/icon/L_blue2.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'F' && item.activity_type === 'Meeting' " src="assets/icon/F_blue2.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'D' && item.activity_type === 'Meeting' " src="assets/icon/D_blue2.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'G' && item.activity_type === 'Meeting' " src="assets/icon/D_blue2.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'S' && item.activity_type === 'Meeting' " src="assets/icon/S_blue2.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'Q' && item.activity_type === 'Meeting' " src="assets/icon/S_blue2.png" alt=""
+                    class="dashlisticonimg">
+
+                  <img *ngIf="item.activity_scheduled_type === 'L' && item.activity_type === 'Call' " src="assets/icon/L_green1.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'F' && item.activity_type === 'Call' " src="assets/icon/F_green1.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'D' && item.activity_type === 'Call' " src="assets/icon/D_green1.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'G' && item.activity_type === 'Call' " src="assets/icon/D_green1.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'S' && item.activity_type === 'Call' " src="assets/icon/S_green1.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'Q' && item.activity_type === 'Call' " src="assets/icon/S_green1.png" alt=""
+                    class="dashlisticonimg">
+
+                  <img *ngIf="item.activity_scheduled_type === 'L' && item.activity_type === 'To-Do' " src="assets/icon/L_orange3.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'F' && item.activity_type === 'To-Do' " src="assets/icon/F_orange3.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'D' && item.activity_type === 'To-Do' " src="assets/icon/D_orange3.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'G' && item.activity_type === 'To-Do' " src="assets/icon/G_orange3.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'S' && item.activity_type === 'To-Do' " src="assets/icon/S_orange3.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'Q' && item.activity_type === 'To-Do' " src="assets/icon/Q_orange3.png" alt=""
+                    class="dashlisticonimg">
+
+                  <ion-row no-padding>
+                    <ion-col col-7 style="left:-30px" no-padding>
+                      <span class="listfontcolor"> {{item.activity_person_name}}</span>
+                      <br>
+                      <span class="listfontcolor"> Source : -</span>
+                      <br>
+                      <span class="listfontcolor">{{item.activity_output_end_datetime}}
+                      </span>
+                    </ion-col>
+                    <ion-col col-5>
+                      <button (click)="lastCallDetails()" class="calldetailsbuttoncss ">
+                        <ion-icon name="call"> </ion-icon> Last Call Details </button>
+                    </ion-col>
+                  </ion-row>
+                  <!-- <img  src="assets/imgs/thread.png"  width="10" height="10" alt="" class=""> -->
+                  <!-- <img  src="assets/imgs/thread.png" class= "dashlistthreadiconimgleft" width="1" height="10" alt="" class=""> -->
+                </div>
+              </ion-list>
+            </div>
+
+            <div *ngIf="item == 'COMPLETED'">
+              <ion-label style="padding-left:10vw">
+                <b>{{item}} ({{countArray[2]}})</b>
+              </ion-label>
+              <ion-list *ngFor="let item of recordsList;let i = index" no-padding>
+                <div no-padding *ngIf="item.activity_output_type != '' " (click)="itemClicked(item)" class="listdesign" no-padding>
+
+                  <img *ngIf="item.activity_scheduled_type === 'L' && item.activity_type === 'Meeting' " src="assets/icon/L_blue2.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'F' && item.activity_type === 'Meeting' " src="assets/icon/F_blue2.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'D' && item.activity_type === 'Meeting' " src="assets/icon/D_blue2.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'G' && item.activity_type === 'Meeting' " src="assets/icon/D_blue2.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'S' && item.activity_type === 'Meeting' " src="assets/icon/S_blue2.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'Q' && item.activity_type === 'Meeting' " src="assets/icon/S_blue2.png" alt=""
+                    class="dashlisticonimg">
+
+                  <img *ngIf="item.activity_scheduled_type === 'L' && item.activity_type === 'Call' " src="assets/icon/L_green1.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'F' && item.activity_type === 'Call' " src="assets/icon/F_green1.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'D' && item.activity_type === 'Call' " src="assets/icon/D_green1.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'G' && item.activity_type === 'Call' " src="assets/icon/D_green1.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'S' && item.activity_type === 'Call' " src="assets/icon/S_green1.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'Q' && item.activity_type === 'Call' " src="assets/icon/S_green1.png" alt=""
+                    class="dashlisticonimg">
+
+                  <img *ngIf="item.activity_scheduled_type === 'L' && item.activity_type === 'To-Do' " src="assets/icon/L_orange3.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'F' && item.activity_type === 'To-Do' " src="assets/icon/F_orange3.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'D' && item.activity_type === 'To-Do' " src="assets/icon/D_orange3.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'G' && item.activity_type === 'To-Do' " src="assets/icon/G_orange3.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'S' && item.activity_type === 'To-Do' " src="assets/icon/S_orange3.png" alt=""
+                    class="dashlisticonimg">
+                  <img *ngIf="item.activity_scheduled_type === 'Q' && item.activity_type === 'To-Do' " src="assets/icon/Q_orange3.png" alt=""
+                    class="dashlisticonimg">
+
+                  <ion-row no-padding>
+                    <ion-col col-7 style="left:-30px" no-padding>
+                      <span class="listfontcolor"> {{item.activity_person_name}}</span>
+                      <br>
+                      <span class="listfontcolor"> Source : -</span>
+                      <br>
+                      <span class="listfontcolor">{{item.activity_output_end_datetime}}
+                      </span>
+                    </ion-col>
+                    <ion-col col-5>
+                      <button (click)="lastCallDetails()" class="calldetailsbuttoncss ">
+                        <ion-icon name="call"> </ion-icon> Last Call Details </button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                  </ion-row>
+                </div>
+              </ion-list>
+            </div>
+            <hr style="border: 0.5px solid lightgray">
+          </div>
+        </div>
+        <div *ngIf="pgn == 4">
+          <ion-list *ngFor="let item of recordsList;let i = index" no-padding>
+            <div no-padding class="listdesign" no-padding *ngIf="item.activity_output_end_datetime <= currenTime && item.activity_output_type == '' ">
+
+              <img *ngIf="item.activity_scheduled_type === 'L' && item.activity_type === 'Meeting' " src="assets/icon/L_blue2.png" alt=""
+                class="dashlisticonimg">
+              <img *ngIf="item.activity_scheduled_type === 'F' && item.activity_type === 'Meeting' " src="assets/icon/F_blue2.png" alt=""
+                class="dashlisticonimg">
+              <img *ngIf="item.activity_scheduled_type === 'D' && item.activity_type === 'Meeting' " src="assets/icon/D_blue2.png" alt=""
+                class="dashlisticonimg">
+              <img *ngIf="item.activity_scheduled_type === 'G' && item.activity_type === 'Meeting' " src="assets/icon/D_blue2.png" alt=""
+                class="dashlisticonimg">
+              <img *ngIf="item.activity_scheduled_type === 'S' && item.activity_type === 'Meeting' " src="assets/icon/S_blue2.png" alt=""
+                class="dashlisticonimg">
+              <img *ngIf="item.activity_scheduled_type === 'Q' && item.activity_type === 'Meeting' " src="assets/icon/S_blue2.png" alt=""
+                class="dashlisticonimg">
+
+              <img *ngIf="item.activity_scheduled_type === 'L' && item.activity_type === 'Call' " src="assets/icon/L_green1.png" alt=""
+                class="dashlisticonimg">
+              <img *ngIf="item.activity_scheduled_type === 'F' && item.activity_type === 'Call' " src="assets/icon/F_green1.png" alt=""
+                class="dashlisticonimg">
+              <img *ngIf="item.activity_scheduled_type === 'D' && item.activity_type === 'Call' " src="assets/icon/D_green1.png" alt=""
+                class="dashlisticonimg">
+              <img *ngIf="item.activity_scheduled_type === 'G' && item.activity_type === 'Call' " src="assets/icon/D_green1.png" alt=""
+                class="dashlisticonimg">
+              <img *ngIf="item.activity_scheduled_type === 'S' && item.activity_type === 'Call' " src="assets/icon/S_green1.png" alt=""
+                class="dashlisticonimg">
+              <img *ngIf="item.activity_scheduled_type === 'Q' && item.activity_type === 'Call' " src="assets/icon/S_green1.png" alt=""
+                class="dashlisticonimg">
+
+              <img *ngIf="item.activity_scheduled_type === 'L' && item.activity_type === 'To-Do' " src="assets/icon/L_orange3.png" alt=""
+                class="dashlisticonimg">
+              <img *ngIf="item.activity_scheduled_type === 'F' && item.activity_type === 'To-Do' " src="assets/icon/F_orange3.png" alt=""
+                class="dashlisticonimg">
+              <img *ngIf="item.activity_scheduled_type === 'D' && item.activity_type === 'To-Do' " src="assets/icon/D_orange3.png" alt=""
+                class="dashlisticonimg">
+              <img *ngIf="item.activity_scheduled_type === 'G' && item.activity_type === 'To-Do' " src="assets/icon/G_orange3.png" alt=""
+                class="dashlisticonimg">
+              <img *ngIf="item.activity_scheduled_type === 'S' && item.activity_type === 'To-Do' " src="assets/icon/S_orange3.png" alt=""
+                class="dashlisticonimg">
+              <img *ngIf="item.activity_scheduled_type === 'Q' && item.activity_type === 'To-Do' " src="assets/icon/Q_orange3.png" alt=""
+                class="dashlisticonimg">
+
+              <ion-row no-padding>
+                <ion-col col-7 style="left:-30px" no-padding>
+                  <span class="listfontcolor"> {{item.activity_person_name}}</span>
+                  <br>
+                  <span class="listfontcolor"> Source : -</span>
+                  <br>
+                  <span class="listfontcolor">{{item.activity_output_end_datetime}}
+                  </span>
+                </ion-col>
+                <ion-col col-5>
+                  <button (click)="lastCallDetails()" class="calldetailsbuttoncss ">
+                    <ion-icon name="call"> </ion-icon> Last Call Details </button>
+                </ion-col>
+              </ion-row>
+            </div>
+          </ion-list>
+        </div>
+      </div>
+      <div *ngSwitchCase="'mydiary'">
+        <ion-item>
+          <ion-grid style="border: 2px solid #0E0438;border-radius: 2vw">
+            <ion-row>
+              <ion-col style="border: 1px solid #0E0438;">
+
+              </ion-col>
+              <ion-col style="border: 1px solid #0E0438;" text-center>
+                <b>P</b>
+              </ion-col>
+              <ion-col style="border: 1px solid #0E0438;" text-center>
+                <b>A</b>
+              </ion-col>
+            </ion-row>
+            <ion-row *ngFor="let type of whichtypeArray;let i = index">
+              <ion-col text-center style="border: 1px solid #0E0438;" col-4 text-center>
+                <b> {{type}} </b>
+              </ion-col>
+              <ion-col style="border: 1px solid #0E0438;" col-4 text-center>
+                <span *ngFor="let type1 of presentList">
+                  <span *ngIf="type1.activity_scheduled_type == type">
+                    <b> {{type1.activity_type_count}}</b>
+                  </span>
+                </span>
+              </ion-col>
+              <ion-col style="border: 1px solid #0E0438;" col-4 text-center>
+                <span *ngFor="let type1 of attendedList">
+                  <span *ngIf="type1.activity_scheduled_type == type && type1.activity_type_count != nil && type1.activity_output_type != ''">
+                    <b> {{type1.activity_type_count}}</b>
+                  </span>
+                </span>
+              </ion-col>
+            </ion-row>
+            <br>
+            <ion-row>
+              <ion-col text-center style="border: 1px solid #0E0438;">
+                <b> Total </b>
+              </ion-col>
+              <ion-col style="border: 1px solid #0E0438;" *ngFor="let type of totalPresent;let i = index" text-center>
+                <b>{{type.activity_type_count}}</b>
+              </ion-col>
+              <ion-col style="border: 1px solid #0E0438;" *ngFor="let type of totalAttended;let i = index" text-center>
+                <b>{{type.activity_type_count}}</b>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+      </div>
+    </div>
+  </ion-card>
+
+</ion-content>
+
+<floating-button> </floating-button>
+<footerbar> </footerbar>

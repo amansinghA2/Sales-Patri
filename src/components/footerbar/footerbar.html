@@ -1,0 +1,15 @@
+<!-- Generated template for the FooterbarComponent component -->
+
+<ion-footer >
+  <ion-toolbar color="purplecolor" >
+    <ion-row text-center >
+      <ion-col *ngFor="let p of optionsList" (click)="allOptionsList(p)" [style.color]="p.color" >
+        <img src="{{p.icon}}" alt="">   
+          <!-- <ion-icon name= {{p.icon}} >
+            {{p.pgn}}
+              <ion-badge id="notifications-badge" color="danger">5</ion-badge>
+          </ion-icon> -->
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

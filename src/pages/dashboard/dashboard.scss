@@ -1,0 +1,65 @@
+page-dashboard {
+
+
+    .vertical-align-content
+{
+     display: flex!important;
+     align-content: center!important;
+     align-items: center!important;
+}
+
+.calldetailsborder{
+    background: lightgray;
+    border-radius: 5px 0px 0px 5px;
+    color:white;
+    padding:1vw;
+}
+
+.listdesign{
+    border:1.5px solid #9498b6;
+    background: #d2d5e9;
+    border-radius: 2vw;
+    margin:2vh;
+    margin-left:8vw; 
+    padding:1.5vh;
+}
+
+.listfontcolor{
+    color: 	#65678D;
+}
+
+.dashlisticonimg{
+    position: relative;
+    float:left;
+    left:-10vw;
+    width: 15vw;
+    height: 15vw;
+}
+
+ion-icon icon{
+    padding-top:2vh;
+    font-size: 10vw;
+}
+
+.dashlistthreadiconimgleft{
+    // position: absolute;
+    float:left;
+    bottom:10px;
+    width: 1px;
+    height: 10px;
+}
+
+.calldetailsbuttoncss{
+   right:-4vw;
+   background: #636694;
+   position: relative;
+   float: right;
+   padding: 1vh;
+   width:30vw;
+   border-radius: 3vw 0px 0px 3vw;
+   color:white;
+   margin-top:1.5vh;
+}
+
+
+}

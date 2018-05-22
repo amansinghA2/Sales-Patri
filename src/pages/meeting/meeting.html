@@ -1,0 +1,165 @@
+<ion-header>
+  <ion-navbar hideBackButton color="purplecolor">
+    <ion-buttons start>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>
+      SCHEDULE MEETING
+    </ion-title>
+    <ion-buttons end>
+      <button (click)="showNotifications()" id="notification-button" ion-button icon-only>
+        <ion-icon name="notifications">
+          <ion-badge id="notifications-badge" color="danger">{{notificationList.length}}</ion-badge>
+        </ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content scroll="true" class="appbackcolor">
+
+  <!-- <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher> -->
+
+  <ion-card class="datediv" no-padding>
+    <ion-row class="datedivpadding">
+      <ion-col padding col-2>
+        <i class="datecalendarcolor" class="fas fa-calendar fa-2x"></i>
+      </ion-col>
+      <ion-col no-padding col-5>
+        <ion-item class="datediv">
+          <ion-label class="dateleftpadding datelabelfont" style="color:black" no-padding floating>Date</ion-label>
+          <ion-datetime class="labelfonts" displayFormat="DD MMM YYYY" no-padding [(ngModel)]="myDate" [min]="2000" [max]="2099" (ionChange)="fromDateData()"></ion-datetime>
+        </ion-item>
+      </ion-col>
+      <ion-col no-padding col-5>
+        <ion-item class="datediv">
+          <ion-label class="dateleftpadding datelabelfont" style="color:black" no-padding floating>Time</ion-label>
+          <ion-datetime class="labelfonts" displayFormat="hh:mm a" no-padding [(ngModel)]="myTime" (ionChange)="fromTimeData()"></ion-datetime>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-card>
+
+  <div class="iondivcss">
+
+    <ion-item no-lines>
+      <ion-label class="labelfonts">Type</ion-label>
+      <ion-select [(ngModel)]="whichtype" (ionChange)="onTypeChange(whichtype)" class="answerfonts">
+        <!-- *ngFor="let item of typesarray" -->
+        <ion-option *ngFor="let key of keys;" [value]="key">
+          <b> {{key}}</b>
+        </ion-option>
+      </ion-select>
+    </ion-item>
+    <hr>
+    <!-- <ion-item no-lines>
+      <ion-label class="labelfonts">Sub Type</ion-label>
+      <ion-select [(ngModel)]="selectedItem" class="answerfonts" (ionChange)="onChange(selectedItem)" *ngIf="typesarray[this.whichtype] == 'L'">
+        <ion-option *ngFor="let item of lfdgsqArray" [value]="item.name">
+          {{item.name}}
+        </ion-option>
+      </ion-select>
+
+      <ion-select [(ngModel)]="selectedItem" class="answerfonts" (ionChange)="onChange(selectedItem)" *ngIf="typesarray[this.whichtype] == 'F'">
+        <ion-option *ngFor="let item of lfdgsqArray" [value]="item.name">
+          {{item.name}}
+        </ion-option>
+      </ion-select>
+
+      <ion-select [(ngModel)]="selectedItem" class="answerfonts" (ionChange)="onChange(selectedItem)" *ngIf="typesarray[this.whichtype] == 'D'">
+        <ion-option *ngFor="let item of lfdgsqArray" [value]="selectedItem">
+          {{item.name}}
+        </ion-option>
+      </ion-select>
+
+      <ion-select [(ngModel)]="selectedItem" class="answerfonts" (ionChange)="onChange(selectedItem)" *ngIf="typesarray[this.whichtype] == 'G'">
+        <ion-option *ngFor="let item of lfdgsqArray" [value]="selectedItem">
+          {{item.name}}
+        </ion-option>
+      </ion-select>
+
+      <ion-select [(ngModel)]="selectedItem" class="answerfonts" (ionChange)="onChange(selectedItem)" *ngIf="typesarray[this.whichtype] == 'S'">
+        <ion-option *ngFor="let item of lfdgsqArray" [value]="item.source_name">
+          {{item.source_name}}
+        </ion-option>
+      </ion-select>
+
+      <ion-select [(ngModel)]="selectedItem" class="answerfonts" (ionChange)="onChange(selectedItem)" *ngIf="typesarray[this.whichtype] == 'Q'">
+        <ion-option *ngFor="let item of lfdgsqArray" [value]="selectedItem">
+          {{item.name}}
+        </ion-option>
+      </ion-select>
+    </ion-item>
+    <hr> -->
+    <ion-row no-padding>
+      <ion-col>
+        <ion-searchbar no-padding [(ngModel)]="selectedItem" (ionInput)="updateSubtypeSearchResult($event)" placeholder="Sub Type"></ion-searchbar>
+        <ion-list *ngIf="showListsubtype == true">
+          <ion-item *ngFor="let item of lfdgsqArray" tappable (click)="selectSubTypeSearchResult(item)" class="ionitema">
+            <span *ngIf="typesarray[this.whichtype] == 'L'"> {{ item.name }} </span>
+            <span *ngIf="typesarray[this.whichtype] == 'F'"> {{ item.name }} </span>
+            <span *ngIf="typesarray[this.whichtype] == 'D'"> {{ item.name }} </span>
+            <span *ngIf="typesarray[this.whichtype] == 'G'"> {{ item.name }} </span>
+            <span *ngIf="typesarray[this.whichtype] == 'S'"> {{ item.source_name }} </span>
+            <span *ngIf="typesarray[this.whichtype] == 'Q'"> {{ item.name }} </span>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+    <hr>
+    <ion-row no-padding>
+      <ion-col col-11>
+        <ion-searchbar no-padding [(ngModel)]="meetingPerson" (ionInput)="getPersonsList($event)" placeholder="Meeting Person"></ion-searchbar>
+        <ion-list *ngIf="showList == true" no-lines>
+          <ion-item no-lines *ngFor="let item of contactList" (click)="personClicked(item)" class="ionitema">
+            Name : {{ item.contact_name }}
+            <br>
+            <span>Email : {{ item.contact_email_1}} </span>
+            <br> Mobile Number : {{ item.contact_number_1}}
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col col-1 (click)="addContact()" text-center style="padding-top:2vh">
+        <span style="padding-top:1.5vh">
+          <i class="fas fa-plus fa-1xx"></i>
+        </span>
+      </ion-col>
+    </ion-row>
+    <hr>
+    <ion-row no-padding>
+      <ion-col>
+        <ion-searchbar no-padding [(ngModel)]="address" (ionInput)="updateSearchResults()" placeholder="Search for a place"></ion-searchbar>
+        <ion-list [hidden]="autocompleteItems.length == 0">
+          <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)" class="ionitema">
+            {{ item.description }}
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+    <hr>
+
+    <!-- </ion-item> -->
+    <!-- </ion-item> -->
+    <ion-item no-lines>
+      <!-- <ion-label >Meeting Description*</ion-label> -->
+      <ion-input type="text" class="answerfonts" [(ngModel)]="meetingDescription" placeholder="Meeting Description *"></ion-input>
+    </ion-item>
+    <hr>
+    <ion-item no-lines>
+      <ion-label class="labelfonts">Leader</ion-label>
+      <ion-toggle [(ngModel)]="isLeader" color="purplecolor"></ion-toggle>
+    </ion-item>
+    <br> 
+  </div>
+  <div text-center class="footerbottomargin">
+    <button (click)="submitEvent()" ion-button color="purplecolor" class="buttoncss"><b>Submit</b></button>
+  </div>
+
+</ion-content>
+
+<floating-button> </floating-button>
+<footerbar> </footerbar>

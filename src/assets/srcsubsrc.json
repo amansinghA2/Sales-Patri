@@ -1,0 +1,7 @@
+{
+    "Builder": [],
+    "BSA": ["Architect" , "Architect - Indirect" , "Builder" , "CA - Indirect" , "Chartered Accountant" , "Corporate Functionary" , "Corp Func - Indirect" , "Development Authority - Indirect" , "DSA of Competition" , "Financial Consultants" , "HDFC Deposit Key Partners" , "HDFC AMC Agents" , "HDFC SLIC agents" , "Law Firm" , "Law Firm - Indirect" , "Real Estate Broker" , "Real Estate Broker - Indirect" , "Self Employed - Financial Advisor" ,"Builder-Indirect" ,"Financial Consultant" , "Financial Consultant operating from home"],
+    "Builder BSA":[],
+    "Broker": [],
+    "Others":["Financial Consultants","Contractor","Engineers/Civil Draftsman","Document writers","CA","Architects","Corporates"]
+}

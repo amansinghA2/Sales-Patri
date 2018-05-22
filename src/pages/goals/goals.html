@@ -1,0 +1,67 @@
+<!--
+  Generated template for the GoalsPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+    <ion-navbar hideBackButton color="purplecolor">
+        <ion-buttons start>
+            <button ion-button menuToggle >
+                <ion-icon name="menu"></ion-icon>
+              </button>
+          </ion-buttons>
+          <ion-title>
+              GOALS LIST
+          </ion-title>
+          <ion-buttons end>
+                <button (click)="showNotifications()" id="notification-button" ion-button icon-only>
+                        <ion-icon name="notifications">
+                            <ion-badge id="notifications-badge" color="danger">{{notificationList.length}}</ion-badge>
+                        </ion-icon>
+                    </button>
+          </ion-buttons>
+    </ion-navbar>
+  </ion-header>
+
+
+<ion-content no-padding class="appbackcolor">
+
+
+        <div no-padding *ngIf="goalsListArray.length != 0">
+                <ion-row *ngFor="let list of goalsListArray" (click)="goalsClicked(list)" class="sourceleadlistdesign" no-padding>
+                    <ion-col col-5>
+                        GOAL ID  :
+                        <br> 
+                        GOAL TITLE :
+                    </ion-col>
+                    <ion-col col-7>
+                        {{list.goal_id}}
+                        <br> 
+                        {{list.goal_title}}
+                    </ion-col>
+                </ion-row>
+                <hr>
+            </div>
+
+
+    <!-- <ion-card class="ioncardcss"> -->
+        <!-- <ion-list *ngFor="let data of goalsListArray" padding> -->
+          <!-- <div no-lines text-left *ngFor="let data of goalsListArray" class="sourceleadlistdesign" padding>
+             <b>GOAL ID  : </b> {{data.goal_id}}  <br>
+             <b>GOAL TITLE :</b> : {{data.goal_title}} -->
+               <!-- {{data.goal_description}} <br><br>
+              <b>Tasks :</b> <br>
+              {{data.tasks}} <br><br> 
+              <b>Escalated to manager : </b>  {{data.escalated_to_manager}} <br><br>
+              <b>Goal Deadline : </b>  {{data.goal_deadline}} <br><br> 
+              <b>Achieved Status (Y/N) : </b> <span *ngIf="data.achieved_status == 0">  No </span> <span *ngIf="data.achieved_status == 1">  Yes </span> <br><br>
+              <b>Remarks : </b>  {{data.remarks}}  -->
+          <!-- </div> -->
+        <!-- </ion-list> -->
+    <!-- </ion-card> -->
+
+</ion-content>
+
+<floating-button> </floating-button>
+<footerbar>  </footerbar>

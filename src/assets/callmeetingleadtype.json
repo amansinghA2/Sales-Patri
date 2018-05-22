@@ -1,0 +1,5 @@
+{
+    "Call": {"Lead Activity":"L" , "File Activity":"F" ,"Disbursement Related":"D" ,"Goal Specific":"G","Source Follow-Up":"S","Query Resolve":"Q"},
+    "MeetingType": {"Lead Activity":"L" , "File Activity":"F" ,"Disbursement Related":"D" ,"Goal Specific":"G","Source Follow-Up":"S","Query Resolve":"Q"},
+    "Lead Type":[]
+}

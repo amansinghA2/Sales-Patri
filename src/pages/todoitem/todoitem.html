@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-navbar hideBackButton color="purplecolor">
+    <ion-buttons start>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>
+      TO DO ITEM
+    </ion-title>
+    <ion-buttons end>
+      <button (click)="showNotifications()" id="notification-button" ion-button icon-only>
+        <ion-icon name="notifications">
+          <ion-badge id="notifications-badge" color="danger">{{notificationList.length}}</ion-badge>
+        </ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content scroll="true" class="appbackcolor">
+
+  <ion-card class="datediv" no-padding>
+    <ion-row class="datedivpadding">
+      <ion-col padding col-2>
+        <i class="datecalendarcolor" class="fas fa-calendar fa-2x"></i>
+      </ion-col>
+      <ion-col no-padding col-5>
+        <ion-item class="datediv">
+          <ion-label class="dateleftpadding datelabelfont" style="color:black" no-padding floating>Date</ion-label>
+          <ion-datetime class="labelfonts" displayFormat="DD MMM YYYY" no-padding [(ngModel)]="myDate" [min]="2000" [max]="2099" (ionChange)="fromDateData()"></ion-datetime>
+        </ion-item>
+      </ion-col>
+      <ion-col no-padding col-5>
+        <ion-item class="datediv">
+          <ion-label class="dateleftpadding datelabelfont" style="color:black" no-padding floating>Time</ion-label>
+          <ion-datetime class="labelfonts" displayFormat="hh:mm a" [(ngModel)]="myTime" no-padding (ionChange)="fromTimeData()"></ion-datetime>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-card>
+
+  <div class="iondivcss">
+    <!-- <ion-label class="labelfonts dateleftpadding">To-Do Type</ion-label> -->
+    <!-- <hr> -->
+    <ion-item no-lines>
+      <ion-label class="labelfonts">To-Do Type</ion-label>
+      <ion-select [(ngModel)]="whichtype" class="answerfonts">
+        <!-- *ngFor="let item of typesarray" -->
+        <ion-option *ngFor="let key of keys;" [value]="key">
+          <b> {{key}}</b>
+        </ion-option>
+      </ion-select>
+    </ion-item>
+    <hr>
+    <ion-item no-lines>
+      <!-- <ion-label class="labelfonts" >Personal Description * </ion-label> -->
+      <ion-input type="text" [(ngModel)]="todoDescription" placeholder="To-Do Description * "></ion-input>
+    </ion-item>
+    <br>
+  </div>
+
+  <div text-center class="footerbottomargin">
+    <button (click)="submitEvent()" class="buttonposition buttoncss" ion-button color="purplecolor" danger><b>Submit</b></button>
+  </div>
+
+</ion-content>
+
+<floating-button></floating-button>
+<footerbar></footerbar>

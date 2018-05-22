@@ -1,0 +1,19 @@
+<!-- Generated template for the FloatingButtonComponent component -->
+
+<ion-fab bottom right class="faqpadding" #fab>
+  <button ion-fab color="purplecolor">
+      <i class="fas fa-plus fa-1xx"></i>
+  </button>
+  <ion-fab-list side="top" >
+    <button ion-fab  (click)="add('meeting', fab)">
+      <i class="fas fa-handshake fa-1xx"></i>
+    </button>
+    <button ion-fab  (click)="add('call', fab)">
+      <i class="fas fa-mobile-alt fa-1xx"></i>
+    </button>
+    <button ion-fab  (click)="add('todo', fab)">
+      <i class="fas fa-list-ol fa-1xx"></i>
+    </button>
+  </ion-fab-list>
+
+</ion-fab>
