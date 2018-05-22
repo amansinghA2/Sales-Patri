@@ -370,7 +370,6 @@ export class SchedulecallPage {
 
   }
 
-
   getPersonsList(ev: any) {
     // Reset items back to all of the items
     var sql = 'SELECT * from ' + this.globals.m_ContactDetails;
