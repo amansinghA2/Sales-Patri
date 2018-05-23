@@ -7,14 +7,14 @@
 
 <ion-header>
   <ion-navbar hideBackButton color="purplecolor">
-    <ion-buttons start>
+    <ion-buttons left>
       <button ion-button menuToggle>
         <ion-icon name="menu"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-title class="titlepadding" style="padding-top:2.5vh" *ngIf="item.activity_type == 'Meeting'"> MEETING UPDATE</ion-title>
-    <ion-title class="titlepadding" style="padding-top:2.5vh" *ngIf="item.activity_type == 'Call'"> CALL UPDATE</ion-title>
-    <ion-buttons end>
+    <ion-title text-center  *ngIf="item.activity_type == 'Meeting'"> MEETING UPDATE</ion-title>
+    <ion-title text-center  *ngIf="item.activity_type == 'Call'"> CALL UPDATE</ion-title>
+    <ion-buttons right>
        <header></header>
     </ion-buttons>
   </ion-navbar>

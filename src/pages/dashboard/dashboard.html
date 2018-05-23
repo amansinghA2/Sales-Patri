@@ -1,14 +1,14 @@
 <ion-header>
   <ion-navbar hideBackButton color="purplecolor">
-    <ion-buttons start>
+    <ion-buttons left>
       <button ion-button menuToggle>
         <ion-icon name="menu"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-title >
+    <ion-title text-center>
       DASHBOARD
     </ion-title>
-    <ion-buttons end>
+    <ion-buttons right>
       <button (click)="showNotifications()" id="notification-button" ion-button icon-only >
         <ion-icon name="notifications">
             <ion-badge *ngIf="isnotificationseen === 'true'" id="notifications-badge" color="danger">{{notificationCount}}</ion-badge>

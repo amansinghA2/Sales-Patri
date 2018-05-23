@@ -118,6 +118,24 @@ export class MapPage {
 
   loadMap() {
 
+
+    // this.latLng = new google.maps.LatLng(18.9403, 72.8353);
+
+    // let mapOptions = {
+    //   center: this.latLng,
+    //   zoom: 12,
+    //   mapTypeId: google.maps.MapTypeId.ROADMAP
+    // }
+
+    // this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+
+    // this.map.getMyLocation().then(res => {
+    //   console.log('Give it to me' +  res.latLng);
+
+    // });
+
+    // this.addMarker();
+
     this.geolocation.getCurrentPosition().then((position) => {
 
       this.latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -159,7 +177,17 @@ export class MapPage {
 
     setTimeout(() => {
 
+     
+      // let mapOptions = {
+      //   center: new google.maps.LatLng(18.9403, 72.8353),
+      //   zoom: 12,
+      //   mapTypeId: google.maps.MapTypeId.ROADMAP
+      // }
+  
+      // this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+
       for (var i = 0; i < this.recordsList.length; i++) {
+
         let marker = new google.maps.Marker({
           map: this.map,
           // icon:'assets/imgs/flag.png', 
@@ -174,6 +202,7 @@ export class MapPage {
           position: { lat: +this.recordsList[i]['activity_latitude'], lng: +this.recordsList[i]['activity_longitude'] }
         });
 
+      
         let content = '<div id="contentname">' + "Client Name : " + this.recordsList[i]['activity_person_name'] + '</div><div id="contentlocation">' + "Meeting time : " + this.recordsList[i]['activity_output_end_datetime'] + '</div>'
         this.addInfoWindow(marker, content);
       }

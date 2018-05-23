@@ -6,15 +6,15 @@
 -->
 <ion-header>
     <ion-navbar hideBackButton color="purplecolor">
-        <ion-buttons start>
+        <ion-buttons left>
             <button ion-button menuToggle>
                 <ion-icon name="menu"></ion-icon>
             </button>
         </ion-buttons>
-        <ion-title class="titlepadding" style="padding-top:2.5vh">
+        <ion-title  text-center>
             SOURCE INFO
         </ion-title>
-        <ion-buttons end>
+        <ion-buttons right>
             <header></header>
         </ion-buttons>
     </ion-navbar>
@@ -24,61 +24,58 @@
 <ion-content no-padding class="appbackcolor">
 
     <ion-card class="ioncardcss" padding>
-
         <b class="infodatasize"> Details :</b>
         <hr>
-
-        <ion-row>
-                <ion-col col-5>
-                    <b> NAME : </b>
-                </ion-col>
-                <ion-col col-7>
-                        {{item.source_name}}
-                </ion-col>
-            </ion-row>
-
-        <ion-row>
-                <ion-col col-5>
-                        <b> SOURCE ID : </b>
-                </ion-col>
-                <ion-col col-7>
-                        {{item.source_id}}
-                </ion-col>
-            </ion-row>
-
         <ion-row>
             <ion-col col-5>
-                    <b> SOURCE TYPE : </b>
+                <b> NAME : </b>
             </ion-col>
             <ion-col col-7>
-                    {{item.source_type}}
+                {{item.source_name}}
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col col-5>
+                <b> SOURCE ID : </b>
+            </ion-col>
+            <ion-col col-7>
+                {{item.source_id}}
             </ion-col>
         </ion-row>
 
         <ion-row>
             <ion-col col-5>
-                    <b> ADDRESS : </b>
+                <b> SOURCE TYPE : </b>
             </ion-col>
             <ion-col col-7>
-                    {{item.source_address_1}} {{item.source_address_2}} {{item.source_pincode}}
+                {{item.source_type}}
             </ion-col>
         </ion-row>
 
         <ion-row>
             <ion-col col-5>
-                    <b> CREATION DATE : </b>
+                <b> ADDRESS : </b>
             </ion-col>
             <ion-col col-7>
-                    {{item.source_created_on}}
+                {{item.source_address_1}} {{item.source_address_2}} {{item.source_pincode}}
             </ion-col>
         </ion-row>
 
         <ion-row>
             <ion-col col-5>
-                    <b> UPDATION DATE : </b>
+                <b> CREATION DATE : </b>
             </ion-col>
             <ion-col col-7>
-                    {{item.source_updated_on}}
+                {{item.source_created_on}}
+            </ion-col>
+        </ion-row>
+
+        <ion-row>
+            <ion-col col-5>
+                <b> UPDATION DATE : </b>
+            </ion-col>
+            <ion-col col-7>
+                {{item.source_updated_on}}
             </ion-col>
         </ion-row>
 
