@@ -1,3 +1,4 @@
+import { Geolocation } from '@ionic-native/geolocation';
 import { AlertController } from 'ionic-angular';
 import { FeedbackPage } from './../pages/feedback/feedback';
 import { FaqsPage } from './../pages/faqs/faqs';
@@ -9,6 +10,7 @@ import { Storage } from '@ionic/storage';
 import { DashboardPage } from '../pages/dashboard/dashboard';
 import { Component, ViewChild } from '@angular/core';
 import { ProfilePage } from '../pages/profile/profile';
+import { Globals } from './globals';
 
 @Component({
   templateUrl: 'app.html'
@@ -18,7 +20,7 @@ export class MyApp {
     rootPage:any;
     pages: Array<{ title: string, component: any}>;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen , public storage:Storage , public alertCtrl:AlertController) {
+  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen , public storage:Storage , public alertCtrl:AlertController , public globals:Globals , public geolocation:Geolocation) {
     platform.ready().then(() => {
 
         this.storage.get('islogin').then((val) => {
@@ -31,6 +33,7 @@ export class MyApp {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
+      statusBar.hide();
       splashScreen.hide();
 
       this.pages = [
@@ -39,6 +42,16 @@ export class MyApp {
         { title: 'Profile', component: ProfilePage },
         { title: 'Logout', component: LoginPage},
       ]
+
+      if(this.globals.isNetworkConnected){
+        this.geolocation.getCurrentPosition().then((position) => {
+            this.globals.setStorage('locationnotconnected' , 'false');
+          }, (err) => {
+              this.globals.setStorage('locationnotconnected' , 'true');
+          });
+    }else{
+
+    }
 
 
     });
@@ -78,8 +91,6 @@ export class MyApp {
     });
     alert.present();
   }
-
-
-
+  
 }
 

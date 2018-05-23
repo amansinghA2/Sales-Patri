@@ -79,6 +79,7 @@ export class SchedulecallPage {
   autocompleteItems: any;
   showListsubtype = false;
   whichname = '';
+  seletedItemFromList = false;
 
   constructor(private platform: Platform, public navCtrl: NavController, public navParams: NavParams, public http: Http, public globals: Globals, public cd: ChangeDetectorRef, public localNotifications: LocalNotifications, public toastCtrl?: ToastController, public storage?: Storage, public user?: User, public loadingCtrl?: LoadingController, public zone?: NgZone) {
 
@@ -110,7 +111,10 @@ export class SchedulecallPage {
       this.updateItems = this.navParams.get('params');
       this.rescitem = this.navParams.get('rescitem');
       // this.whichtype = this.globals.typeSelect(this.updateItems['type']);
-      this.whichtype = 'Lead Activity';
+      this.meetingPerson = this.rescitem['activity_person_name'];
+      this.meetingDescription = this.rescitem['activity_description'];
+      this.address = this.rescitem['activity_location'];
+      this.typesarray[this.rescitem['activity_scheduled_type']]
     }
 
     if (this.navParams.get('item')) {
@@ -119,6 +123,10 @@ export class SchedulecallPage {
       this.meetingPersonn = this.meetingPerson;
       this.meetingDescription = this.items['activity_description'];
     }
+
+    var sql = 'SELECT * from ' + this.globals.m_ContactDetails;
+    this.contactList = this.globals.selectTables(sql);
+
 
     if (this.navParams.get('dataArray')) {
       this.contactArray = this.navParams.get('dataArray');
@@ -193,7 +201,7 @@ export class SchedulecallPage {
             sql = 'SELECT * from ' + this.globals.m_Lead_Master;
             this.lfdgsqArray = this.globals.selectTables(sql);
             setTimeout(() => {
-              this.selectedItem = this.lfdgsqArray[0]['name'];
+              // this.selectedItem = this.lfdgsqArray[0]['name'];
               this.activityrefid = this.lfdgsqArray[0]['lead_no'];
             }, 500);
           } else {
@@ -269,7 +277,7 @@ export class SchedulecallPage {
             sql = 'SELECT * from ' + this.globals.m_Source_Master;
             this.lfdgsqArray = this.globals.selectTables(sql);
             setTimeout(() => {
-              this.selectedItem = this.lfdgsqArray[0]['source_name'];
+              // this.selectedItem = this.lfdgsqArray[0]['source_name'];
               this.activityrefid = this.lfdgsqArray[0]['source_id'];
             }, 500);
           } else {
@@ -333,6 +341,11 @@ export class SchedulecallPage {
   }
 
   selectSubTypeSearchResult(item) {
+
+    if (this.selectedItem != '') {
+      this.seletedItemFromList = true;
+    }
+
     this.lfdgsqtype('onchange', item);
     this.showListsubtype = false;
   }
@@ -432,122 +445,147 @@ export class SchedulecallPage {
       this.globals.codeLatLng();
     }
 
-    if (this.meetingPersonn == '') {
+
+    if (this.selectedItem == '') {
 
       let toast = this.toastCtrl.create({
-        message: 'Please add the new name first to continue',
+        message: 'Sub Type canot be left blank',
         duration: 3000,
         position: 'bottom'
       });
+
       toast.present();
 
-    } else {
+    } else
+      if (this.seletedItemFromList == false) {
 
-      var loading = this.loadingCtrl.create({
-        content: 'Loading Please wait...'
-      });
+        let toast = this.toastCtrl.create({
+          message: 'Please select valid subtype to continue',
+          duration: 3000,
+          position: 'bottom'
+        });
 
-      loading.present();
+        toast.present();
 
-      var dataArray;
+      } else
+        if (this.meetingPersonn == '') {
 
-      setTimeout(() => {
-
-        if (this.meetingPerson != '' && this.meetingDescription != '' && this.address != '') {
-
-          this.storage.get('empid').then((val) => {
-
-            this.localNotifications.schedule({
-              text: 'Call with ' + this.meetingPerson + ' scheduled on ' + this.selectedDate + ' at ' + this.selectedTime,
-              trigger: { at: new Date(moment.utc(this.pushDateString).local().valueOf() - 10 * 1000) },
-              led: 'FF0000',
-              sound: null,
-              icon: 'file://assets/imgs/icon.png',
-              smallIcon: 'file://assets/imgs/icon.png',
-            });
-
-            var notifyArray = { "notification_id": '', "notification_from": '', "notification_to": '', "notification_redirect_url": '', "notification_title": 'Meeting Scheduled', "notification_descripiton": 'Metting with ' + this.meetingPerson + ' scheduled on ' + this.selectedDate + ' at ' + this.selectedTime, "notification_is_unread": '', "notification_created_on": '', "notification_updated_on": '' };
-            this.globals.updateTables('notification', this.globals.m_Notifications, notifyArray);
-
-            if (this.items) {
-
-              dataArray = { "dash_optionid": 2, "activity_date_time": this.selectedDate, "activity_type": 'Call', "activity_person_name": this.meetingPerson, "activity_scheduled_type": this.typesarray[this.whichtype], "activity_ref_id": this.activityrefid, "activity_location": this.address, "activity_description": this.meetingDescription, "activity_status": 'ATTENDED', "activity_output_type": this.updateItems['type'], "activity_output_remarks": this.updateItems['description'], "activity_output_end_datetime": this.dateTime, "next_activity_id": '', "activity_created_on": this.dateTime, "activity_updated_on": moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ'), "activity_created_by": val, "activity_updated_by": val, "activity_latitude": this.latitude, "activity_longitude": this.longitude, "current_lat": this.globals.curr_lat, "current_lng": this.globals.curr_lng, "current_loc": "", "contact_id": this.contactId, "team_leader": this.isLeader }
-              this.globals.updateTables('call', this.globals.m_Activities, dataArray);
-
-              setTimeout(() => {
-                var sql = 'SELECT * from ' + this.globals.m_Activities;
-                this.recordsList = this.globals.selectTables(sql);
-                if (this.globals.isNetworkConnected) {
-                  setTimeout(() => {
-                    this.storage.get('token').then((val) => {
-                      this.user.postMethod('sync', JSON.stringify(this.recordsList), { 'Authorization': val }).subscribe((resp) => {
-
-                        console.log("Respis" + JSON.stringify(resp));
-                      })
-                    })
-                  }, 100);
-                } else {
-                  let toast = this.toastCtrl.create({
-                    message: 'Check Your Internet connection',
-                    duration: 3000,
-                    position: 'bottom'
-                  });
-
-                  toast.present();
-                }
-                loading.dismiss();
-                this.navCtrl.push(MeetingupdatePage, { val: 'meeting' });
-              }, 100);
-
-            } else {
-
-              if (this.updateItems) {
-                dataArray = { "dash_optionid": 2, "activity_date_time": this.selectedDate, "activity_type": 'Call', "activity_person_name": this.meetingPerson, "activity_scheduled_type": this.typesarray[this.whichtype], "activity_ref_id": this.activityrefid, "activity_location": this.address, "activity_description": this.meetingDescription, "activity_status": 'POSTPONE', "activity_output_type": '', "activity_output_remarks": '', "activity_output_end_datetime": this.dateTime, "next_activity_id": '', "activity_created_on": moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ'), "activity_updated_on": this.dateTime, "activity_created_by": val, "activity_updated_by": val, "activity_latitude": this.latitude, "activity_longitude": this.longitude, "current_lat": this.globals.curr_lat, "current_lng": this.globals.curr_lng, "current_loc": "", "contact_id": this.contactId, "team_leader": this.isLeader }
-                this.globals.updateTables('call', this.globals.m_Activities, dataArray, this.rescitem['id'], this.updateItems);
-              } else {
-                dataArray = { "dash_optionid": 2, "activity_date_time": this.selectedDate, "activity_type": 'Call', "activity_person_name": this.meetingPerson, "activity_scheduled_type": this.typesarray[this.whichtype], "activity_ref_id": this.activityrefid, "activity_location": this.address, "activity_description": this.meetingDescription, "activity_status": 'OPEN', "activity_output_type": '', "activity_output_remarks": '', "activity_output_end_datetime": this.dateTime, "next_activity_id": '', "activity_created_on": moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ'), "activity_updated_on": this.dateTime, "activity_created_by": val, "activity_updated_by": val, "activity_latitude": this.latitude, "activity_longitude": this.longitude, "current_lat": this.globals.curr_lat, "current_lng": this.globals.curr_lng, "current_loc": "", "contact_id": this.contactId, "team_leader": this.isLeader }
-                this.globals.updateTables('call', this.globals.m_Activities, dataArray);
-              }
-
-              setTimeout(() => {
-                var sql = 'SELECT * from ' + this.globals.m_Activities;
-                this.recordsList = this.globals.selectTables(sql);
-                if (this.globals.isNetworkConnected) {
-                  setTimeout(() => {
-                    this.storage.get('token').then((val) => {
-                      this.user.postMethod('sync', JSON.stringify(this.recordsList), { 'Authorization': val }).subscribe((resp) => {
-                        console.log("Respis" + JSON.stringify(resp));
-                      })
-                    })
-                  }, 100);
-                } else {
-                  let toast = this.toastCtrl.create({
-                    message: 'Check Your Internet connection',
-                    duration: 3000,
-                    position: 'bottom'
-                  });
-
-                  toast.present();
-                }
-                loading.dismiss();
-                this.navCtrl.push(DashboardPage);
-              }, 100);
-            }
-          });
-
-        } else {
           let toast = this.toastCtrl.create({
-            message: 'Please Enter mandatory fields',
+            message: 'Please add the new name first to continue',
             duration: 3000,
             position: 'bottom'
           });
-          loading.dismiss();
           toast.present();
+
+        } else {
+
+          var loading = this.loadingCtrl.create({
+            content: 'Loading Please wait...'
+          });
+
+          loading.present();
+
+          var dataArray;
+
+          setTimeout(() => {
+
+            if (this.meetingPerson != '' && this.meetingDescription != '' && this.address != '') {
+
+              this.storage.get('empid').then((val) => {
+
+                this.localNotifications.schedule({
+                  text: 'Call with ' + this.meetingPerson + ' scheduled on ' + this.selectedDate + ' at ' + this.selectedTime,
+                  trigger: { at: new Date(moment.utc(this.pushDateString).local().valueOf() - 10 * 1000) },
+                  led: 'FF0000',
+                  sound: null,
+                  icon: 'file://assets/imgs/icon.png',
+                  smallIcon: 'file://assets/imgs/icon.png',
+                });
+
+                this.globals.setStorage('isseennotification', 'true');
+
+                var notifyArray = { "notification_id": '', "notification_from": '', "notification_to": '', "notification_redirect_url": '', "notification_title": 'Meeting Scheduled', "notification_descripiton": 'Metting with ' + this.meetingPerson + ' scheduled on ' + this.selectedDate + ' at ' + this.selectedTime, "notification_is_unread": '', "notification_created_on": '', "notification_updated_on": '' , 'notification_isread':'0'  , 'notification_activitytype': 'Call' , "notification_scheduled_type": this.typesarray[this.whichtype]};
+                this.globals.updateTables('notification', this.globals.m_Notifications, notifyArray);
+
+                if (this.items) {
+
+                  dataArray = { "dash_optionid": 2, "activity_date_time": this.selectedDate, "activity_type": 'Call', "activity_person_name": this.meetingPerson, "activity_scheduled_type": this.typesarray[this.whichtype], "activity_ref_id": this.activityrefid, "activity_location": this.address, "activity_description": this.meetingDescription, "activity_status": 'ATTENDED', "activity_output_type": this.updateItems['type'], "activity_output_remarks": this.updateItems['description'], "activity_output_end_datetime": this.dateTime, "next_activity_id": '', "activity_created_on": this.dateTime, "activity_updated_on": moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ'), "activity_created_by": val, "activity_updated_by": val, "activity_latitude": this.latitude, "activity_longitude": this.longitude, "current_lat": this.globals.curr_lat, "current_lng": this.globals.curr_lng, "current_loc": "", "contact_id": this.contactId, "team_leader": this.isLeader }
+                  this.globals.updateTables('call', this.globals.m_Activities, dataArray);
+
+                  setTimeout(() => {
+                    var sql = 'SELECT * from ' + this.globals.m_Activities;
+                    this.recordsList = this.globals.selectTables(sql);
+                    if (this.globals.isNetworkConnected) {
+                      setTimeout(() => {
+                        this.storage.get('token').then((val) => {
+                          this.user.postMethod('sync', JSON.stringify(this.recordsList), { 'Authorization': val }).subscribe((resp) => {
+
+                            console.log("Respis" + JSON.stringify(resp));
+                          })
+                        })
+                      }, 100);
+                    } else {
+                      let toast = this.toastCtrl.create({
+                        message: 'Check Your Internet connection',
+                        duration: 3000,
+                        position: 'bottom'
+                      });
+
+                      toast.present();
+                    }
+                    loading.dismiss();
+                    this.navCtrl.push(MeetingupdatePage, { val: 'meeting' });
+                  }, 100);
+
+                } else {
+
+                  if (this.updateItems) {
+                    dataArray = { "dash_optionid": 2, "activity_date_time": this.selectedDate, "activity_type": 'Call', "activity_person_name": this.meetingPerson, "activity_scheduled_type": this.typesarray[this.whichtype], "activity_ref_id": this.activityrefid, "activity_location": this.address, "activity_description": this.meetingDescription, "activity_status": 'POSTPONE', "activity_output_type": '', "activity_output_remarks": '', "activity_output_end_datetime": this.dateTime, "next_activity_id": '', "activity_created_on": moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ'), "activity_updated_on": this.dateTime, "activity_created_by": val, "activity_updated_by": val, "activity_latitude": this.latitude, "activity_longitude": this.longitude, "current_lat": this.globals.curr_lat, "current_lng": this.globals.curr_lng, "current_loc": "", "contact_id": this.contactId, "team_leader": this.isLeader }
+                    this.globals.updateTables('call', this.globals.m_Activities, dataArray, this.rescitem['id'], this.updateItems);
+                  } else {
+                    dataArray = { "dash_optionid": 2, "activity_date_time": this.selectedDate, "activity_type": 'Call', "activity_person_name": this.meetingPerson, "activity_scheduled_type": this.typesarray[this.whichtype], "activity_ref_id": this.activityrefid, "activity_location": this.address, "activity_description": this.meetingDescription, "activity_status": 'OPEN', "activity_output_type": '', "activity_output_remarks": '', "activity_output_end_datetime": this.dateTime, "next_activity_id": '', "activity_created_on": moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ'), "activity_updated_on": this.dateTime, "activity_created_by": val, "activity_updated_by": val, "activity_latitude": this.latitude, "activity_longitude": this.longitude, "current_lat": this.globals.curr_lat, "current_lng": this.globals.curr_lng, "current_loc": "", "contact_id": this.contactId, "team_leader": this.isLeader }
+                    this.globals.updateTables('call', this.globals.m_Activities, dataArray);
+                  }
+
+                  setTimeout(() => {
+                    var sql = 'SELECT * from ' + this.globals.m_Activities;
+                    this.recordsList = this.globals.selectTables(sql);
+                    if (this.globals.isNetworkConnected) {
+                      setTimeout(() => {
+                        this.storage.get('token').then((val) => {
+                          this.user.postMethod('sync', JSON.stringify(this.recordsList), { 'Authorization': val }).subscribe((resp) => {
+                            console.log("Respis" + JSON.stringify(resp));
+                          })
+                        })
+                      }, 100);
+                    } else {
+                      let toast = this.toastCtrl.create({
+                        message: 'Check Your Internet connection',
+                        duration: 3000,
+                        position: 'bottom'
+                      });
+
+                      toast.present();
+                    }
+                    loading.dismiss();
+                    this.navCtrl.push(DashboardPage);
+                  }, 100);
+                }
+              });
+
+            } else {
+              let toast = this.toastCtrl.create({
+                message: 'Please Enter mandatory fields',
+                duration: 3000,
+                position: 'bottom'
+              });
+              loading.dismiss();
+              toast.present();
+            }
+
+          }, 500);
+
         }
-
-      }, 500);
-
-    }
   }
 
 

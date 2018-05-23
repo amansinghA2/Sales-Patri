@@ -1,6 +1,8 @@
+import { Storage } from '@ionic/storage';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Globals } from '../../app/globals';
+import { SQLiteObject, SQLite } from '@ionic-native/sqlite';
 
 
 /**
@@ -18,11 +20,38 @@ import { Globals } from '../../app/globals';
 export class NotificationsPage {
 
   notificationList:any;
+  isChecked = true;
+  isnotificationseen:any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,public globals:Globals) {
+  constructor(public navCtrl: NavController, public navParams: NavParams,public globals:Globals , public storage:Storage , public sqlite:SQLite) {
 
-    var sql = 'SELECT * from ' + this.globals.m_Notifications;
+    var sql = 'SELECT * from ' + this.globals.m_Notifications + ' ORDER BY id DESC; ';
     this.notificationList = this.globals.selectTables(sql);
+
+    this.globals.setStorage('isseennotification' , 'false');
+   
+
+    setTimeout(() => {
+
+      for(let i = 0 ; i < this.notificationList.length ; i++){
+
+
+        this.sqlite.create({
+          name: this.globals.dbName,
+          location: 'default'
+      }).then((db: SQLiteObject) => {
+        db.executeSql('UPDATE m_Notifications SET notification_isread=? WHERE notification_isread=?', ['1', '0'])
+        .then(res => {
+            console.log("m_Notificationsinsert inserted");
+        })
+
+      })
+
+        // 'notification_isread':'0'  , 'notification_activitytype': 'Meeting'
+      }
+
+      console.log(JSON.stringify(this.notificationList));
+    }, 500);
 
   }
 

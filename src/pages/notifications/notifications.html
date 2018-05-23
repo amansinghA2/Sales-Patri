@@ -7,35 +7,74 @@
 <ion-header>
     <ion-navbar hideBackButton color="purplecolor">
         <ion-buttons start>
-            <button ion-button menuToggle >
+            <button ion-button menuToggle>
                 <ion-icon name="menu"></ion-icon>
-              </button>
-          </ion-buttons>
-          <ion-title>
-              NOTIFICATIONS
-          </ion-title>
-          <ion-buttons end>
-                <button (click)="showNotifications()" id="notification-button" ion-button icon-only>
-                        <ion-icon name="notifications">
-                            <ion-badge id="notifications-badge" color="danger">{{notificationList.length}}</ion-badge>
-                        </ion-icon>
-                    </button>
-          </ion-buttons>
+            </button>
+        </ion-buttons>
+        <ion-title class="titlepadding" style="padding-top:2.5vh">
+            NOTIFICATIONS
+        </ion-title>
+        <ion-buttons end>
+            <header></header>
+        </ion-buttons>
     </ion-navbar>
-  </ion-header>
-
+</ion-header>
 
 <ion-content padding>
 
-<ion-list *ngFor="let notification of notificationList" class="listdesign" no-padding >
-  <!-- <ion-title>{{notification.notification_title}}</ion-title> -->
-  <ion-row no-padding>
-      {{notification.notification_descripiton}}
-  </ion-row>
-</ion-list>  
+    <ion-list *ngFor="let item of notificationList"  no-padding style="margin-left:4vw">
+        <!-- <ion-title>{{notification.notification_title}}</ion-title> -->
+        <div class="listdesign" no-padding>
+        <img  *ngIf="item.notification_scheduled_type === 'L' && item.notification_activitytype === 'Meeting' " src="assets/icon/L_blue2.png" alt=""
+            class="dashlisticonimg">
+        <img *ngIf="item.notification_scheduled_type === 'F' && item.notification_activitytype === 'Meeting' " src="assets/icon/F_blue2.png" alt=""
+            class="dashlisticonimg">
+        <img *ngIf="item.notification_scheduled_type === 'D' && item.notification_activitytype === 'Meeting' " src="assets/icon/D_blue2.png" alt=""
+            class="dashlisticonimg">
+        <img *ngIf="item.notification_scheduled_type === 'G' && item.notification_activitytype === 'Meeting' " src="assets/icon/D_blue2.png" alt=""
+            class="dashlisticonimg">
+        <img *ngIf="item.notification_scheduled_type === 'S' && item.notification_activitytype === 'Meeting' " src="assets/icon/S_blue2.png" alt=""
+            class="dashlisticonimg">
+        <img *ngIf="item.notification_scheduled_type === 'Q' && item.notification_activitytype === 'Meeting' " src="assets/icon/S_blue2.png" alt=""
+            class="dashlisticonimg">
 
-<div class="footerbottomargin"></div>
+        <img *ngIf="item.notification_scheduled_type === 'L' && item.notification_activitytype === 'Call' " src="assets/icon/L_green1.png" alt=""
+            class="dashlisticonimg">
+        <img *ngIf="item.notification_scheduled_type === 'F' && item.notification_activitytype === 'Call' " src="assets/icon/F_green1.png" alt=""
+            class="dashlisticonimg">
+        <img *ngIf="item.notification_scheduled_type === 'D' && item.notification_activitytype === 'Call' " src="assets/icon/D_green1.png" alt=""
+            class="dashlisticonimg">
+        <img *ngIf="item.notification_scheduled_type === 'G' && item.notification_activitytype === 'Call' " src="assets/icon/D_green1.png" alt=""
+            class="dashlisticonimg">
+        <img *ngIf="item.notification_scheduled_type === 'S' && item.notification_activitytype === 'Call' " src="assets/icon/S_green1.png" alt=""
+            class="dashlisticonimg">
+        <img *ngIf="item.notification_scheduled_type === 'Q' && item.notification_activitytype === 'Call' " src="assets/icon/S_green1.png" alt=""
+            class="dashlisticonimg">
+
+        <img *ngIf="item.notification_scheduled_type === 'L' && item.notification_activitytype === 'To-Do' " src="assets/icon/L_orange3.png" alt=""
+            class="dashlisticonimg">
+        <img *ngIf="item.notification_scheduled_type === 'F' && item.notification_activitytype === 'To-Do' " src="assets/icon/F_orange3.png" alt=""
+            class="dashlisticonimg">
+        <img *ngIf="item.notification_scheduled_type === 'D' && item.notification_activitytype === 'To-Do' " src="assets/icon/D_orange3.png" alt=""
+            class="dashlisticonimg">
+        <img *ngIf="item.notification_scheduled_type === 'G' && item.notification_activitytype === 'To-Do' " src="assets/icon/G_orange3.png" alt=""
+            class="dashlisticonimg">
+        <img *ngIf="item.notification_scheduled_type === 'S' && item.notification_activitytype === 'To-Do' " src="assets/icon/S_orange3.png" alt=""
+            class="dashlisticonimg">
+        <img *ngIf="item.notification_scheduled_type === 'Q' && item.notification_activitytype === 'To-Do' " src="assets/icon/Q_orange3.png" alt=""
+            class="dashlisticonimg">
+
+        <ion-row no-padding>
+            {{item.notification_descripiton}}
+            <hr style="border: 0.1px solid gray;width:100%">
+            <span *ngIf="item.notification_isread === '0'" style="font-size:3vw"> <b> Unread </b></span>
+            <span *ngIf="item.notification_isread === '1'" style="font-size:3vw"> <b> Read </b></span>
+        </ion-row>
+    </div>
+    </ion-list>
+
+    <div class="footerbottomargin"></div>
 </ion-content>
 
 <floating-button> </floating-button>
-<footerbar>  </footerbar>
+<footerbar> </footerbar>

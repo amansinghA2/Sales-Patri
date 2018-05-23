@@ -24,7 +24,8 @@ export class GoalsPage {
   shownGroup = null;
   notificationList:any;
   goalsListArray = [];
-  
+  selectedgoalsListArray = [];
+
   constructor(public navCtrl: NavController, public navParams: NavParams,public user:User,public storage:Storage , public globals:Globals) {
 
       var sql = 'SELECT * from ' + this.globals.m_Notifications;
@@ -34,16 +35,45 @@ export class GoalsPage {
       var sql = 'SELECT * from ' + this.globals.m_Goals_Master;
       this.goalsListArray = this.globals.selectTables(sql);
 
+
+      setTimeout(() => {
+        this.selectedgoalsListArray = this.goalsListArray;
+      }, 200);
+    
+
   }
 
-
   ionViewDidLoad() {
-
     console.log('ionViewDidLoad GoalsPage');
   }
 
   showNotifications() {
     this.navCtrl.push(NotificationsPage);
+  }
+
+  updateSubtypeSearchResult(ev: any) {
+
+    var sql = 'SELECT * from ' + this.globals.m_Goals_Master;
+    this.goalsListArray = this.globals.selectTables(sql);
+
+    setTimeout(() => {
+
+      this.selectedgoalsListArray = this.goalsListArray;
+
+      let val = ev.target.value;
+
+      // if the value is an empty string don't filter the items
+      if (val && val.trim() != '') {
+        // this.showListsubtype = true;
+        this.selectedgoalsListArray = this.selectedgoalsListArray.filter((item) => {
+          return (item['goal_id'].toLowerCase().indexOf(val.toLowerCase()) > -1);
+        })
+      } else {
+        // this.showListsubtype = false;
+      }
+
+    }, 100);
+
   }
 
   toggleGroup(group) {

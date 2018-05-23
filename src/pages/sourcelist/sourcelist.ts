@@ -23,11 +23,14 @@ export class SourcelistPage implements OnInit {
 
   sourceListArray = [];
   notificationList:any;
-  
+  selectedsourceListArray = [];
+
   constructor(public navCtrl: NavController, public navParams: NavParams, public storage: Storage, public globals: Globals, public user: User, public api: Api, public loadingCtrl: LoadingController) {
 
     var sql = 'SELECT * from ' + this.globals.m_Notifications;
     this.notificationList = this.globals.selectTables(sql);
+
+
 
   }
 
@@ -44,8 +47,38 @@ export class SourcelistPage implements OnInit {
 
     var sql = 'SELECT * from ' + this.globals.m_Source_Master;
     this.sourceListArray = this.globals.selectTables(sql);
+
+    setTimeout(() => {
+      this.selectedsourceListArray = this.sourceListArray;
+    }, 200);
    
   }
+
+  updateSubtypeSearchResult(ev: any) {
+
+    var sql = 'SELECT * from ' + this.globals.m_Source_Master;
+    this.sourceListArray = this.globals.selectTables(sql);
+
+    setTimeout(() => {
+
+      this.selectedsourceListArray = this.sourceListArray;
+
+      let val = ev.target.value;
+
+      // if the value is an empty string don't filter the items
+      if (val && val.trim() != '') {
+        // this.showListsubtype = true;
+        this.selectedsourceListArray = this.selectedsourceListArray.filter((item) => {
+          return (item['source_name'].toLowerCase().indexOf(val.toLowerCase()) > -1);
+        })
+      } else {
+        // this.showListsubtype = false;
+      }
+
+    }, 100);
+
+  }
+
 
   sourceClicked(item){
       this.navCtrl.push(SourceinfoPage , {val: item});

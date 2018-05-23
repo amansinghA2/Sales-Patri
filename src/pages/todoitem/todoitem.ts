@@ -88,7 +88,8 @@ export class TodoitemPage {
       this.updateItems = this.navParams.get('params');
       this.rescitem = this.navParams.get('rescitem');
       // this.whichtype = this.globals.typeSelect(this.updateItems['type']);
-      this.whichtype = 'Lead Activity';
+      this.todoDescription = this.rescitem['activity_description'];
+      this.typesarray[this.rescitem['activity_scheduled_type']]
     }
 
     this.getJSON(this.http);
@@ -168,7 +169,9 @@ showNotifications() {
             smallIcon: 'file://assets/imgs/icon.png',
           });
 
-          var notifyArray = { "notification_id": '', "notification_from": '', "notification_to": '', "notification_redirect_url": '', "notification_title": 'Meeting Scheduled', "notification_descripiton": 'Metting with ' + this.meetingPerson + ' scheduled on ' + this.selectedDate + ' at ' + this.selectedTime, "notification_is_unread": '', "notification_created_on": '', "notification_updated_on": '' };
+          this.globals.setStorage('isseennotification' , 'true');
+
+          var notifyArray = { "notification_id": '', "notification_from": '', "notification_to": '', "notification_redirect_url": '', "notification_title": 'Meeting Scheduled', "notification_descripiton": 'Metting with ' + this.meetingPerson + ' scheduled on ' + this.selectedDate + ' at ' + this.selectedTime, "notification_is_unread": '', "notification_created_on": '', "notification_updated_on": '' , 'notification_isread':'0'  , 'notification_activitytype': 'To-Do' , "notification_scheduled_type": this.typesarray[this.whichtype]};
           this.globals.updateTables('notification', this.globals.m_Notifications, notifyArray);
 
           if (this.items) {

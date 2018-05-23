@@ -6,6 +6,7 @@ import { Globals } from './../../app/globals';
 import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, LoadingController, Platform } from 'ionic-angular';
 import { FormControl, FormGroup, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { Storage } from '@ionic/storage';
 
 declare var google;
 
@@ -28,18 +29,24 @@ export class ContactPage implements OnInit {
   contactList: any;
   isDuplicateEmail = false;
   notificationList: any;
-  autocompleteItems:any;
-  GoogleAutocomplete:any;
-  default_lat:any;
-  default_lng:any;
+  autocompleteItems: any;
+  GoogleAutocomplete: any;
+  default_lat: any;
+  default_lng: any;
+  isnotificationseen: any;
+  locationmaps = '';
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public globals: Globals, public toastCtrl: ToastController, public loading: LoadingController, public platform: Platform , public zone:NgZone) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public globals: Globals, public toastCtrl: ToastController, public loading: LoadingController, public platform: Platform, public zone: NgZone, public storage: Storage) {
 
     this.autocompleteItems = [];
     platform.ready().then(() => {
 
       var sql = 'SELECT * from ' + this.globals.m_Notifications;
       this.notificationList = this.globals.selectTables(sql);
+
+      this.storage.get('isseennotification').then((val) => {
+        this.isnotificationseen = val;
+      })
 
     });
 
@@ -92,8 +99,9 @@ export class ContactPage implements OnInit {
 
   selectSearchResult(item) {
     // this.clearMarkers();
+    this.locationmaps = item['description'];
 
-    this.user.controls['meetaddr'].setValue(item['description']); 
+    this.user.controls['meetaddr'].setValue(item['description']);
 
     this.autocompleteItems = [];
 
@@ -110,9 +118,9 @@ export class ContactPage implements OnInit {
   submitEvent() {
     this.isDuplicateEmail = false;
     var dataArray;
-    console.log("OCntact data" + this.user.get('meetaddr').value  + this.default_lat  + this.default_lng);
+    console.log("OCntact data" + this.user.get('meetaddr').value + this.default_lat + this.default_lng);
 
-    dataArray = { "ref_id": '', "contact_name": this.user.get('name').value, "contact_number_1": this.user.get('mob').value, "contact_number_2": '', "contact_email_1": this.user.get('email').value, "contact_email_2": '', "contact_dob": this.user.get('dob').value, "contact_created_on": '', "contact_updated_on": '', "contact_created_by": '', "contact_updated_by": '' , "def_addr": this.user.get('meetaddr').value  , "def_lat": this.default_lat , "def_lng": this.default_lng }
+    dataArray = { "ref_id": '', "contact_name": this.user.get('name').value, "contact_number_1": this.user.get('mob').value, "contact_number_2": '', "contact_email_1": this.user.get('email').value, "contact_email_2": '', "contact_dob": this.user.get('dob').value, "contact_created_on": '', "contact_updated_on": '', "contact_created_by": '', "contact_updated_by": '', "def_addr": this.user.get('meetaddr').value, "def_lat": this.default_lat, "def_lng": this.default_lng }
 
     for (let i = 0; i < this.contactList.length; i++) {
       if (this.contactList[i]['contact_email_1'] == this.user.get('email').value) {
@@ -120,21 +128,30 @@ export class ContactPage implements OnInit {
       }
     }
 
-    if (this.isDuplicateEmail == true) {
+
+    if (this.locationmaps == '') {
       let toast = this.toastCtrl.create({
-        message: 'This email id is already registered, please use different id',
+        message: 'Choose location from the drop down list to continue',
         duration: 3000,
         position: 'bottom'
       });
       toast.present();
-    } else {
-      this.globals.updateTables('meeting', this.globals.m_ContactDetails, dataArray);
-      if (this.fromWhichPage == 'meeting') {
-        this.navCtrl.push(MeetingPage, { dataArray });
+    } else
+      if (this.isDuplicateEmail == true) {
+        let toast = this.toastCtrl.create({
+          message: 'This email id is already registered, please use different id',
+          duration: 3000,
+          position: 'bottom'
+        });
+        toast.present();
       } else {
-        this.navCtrl.push(SchedulecallPage, { dataArray });
+        this.globals.updateTables('meeting', this.globals.m_ContactDetails, dataArray);
+        if (this.fromWhichPage == 'meeting') {
+          this.navCtrl.push(MeetingPage, { dataArray });
+        } else {
+          this.navCtrl.push(SchedulecallPage, { dataArray });
+        }
       }
-    }
 
 
   }

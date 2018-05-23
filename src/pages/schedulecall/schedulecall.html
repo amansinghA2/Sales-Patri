@@ -5,15 +5,11 @@
           <ion-icon name="menu"></ion-icon>
         </button>
       </ion-buttons>
-      <ion-title>
+      <ion-title class="titlepadding" style="padding-top:2.5vh">
         SCHEDULE CALL
       </ion-title>
       <ion-buttons end>
-        <button (click)="showNotifications()" id="notification-button" ion-button icon-only>
-          <ion-icon name="notifications">
-            <ion-badge id="notifications-badge" color="danger">{{notificationList.length}}</ion-badge>
-          </ion-icon>
-        </button>
+        <header></header>
       </ion-buttons>
     </ion-navbar>
   </ion-header>
@@ -150,7 +146,7 @@
       </ion-item>
       <hr>
       <ion-item no-lines>
-        <ion-label class="labelfonts">Leader</ion-label>
+        <ion-label class="labelfonts">Team Leader Required?</ion-label>
         <ion-toggle [(ngModel)]="isLeader" color="purplecolor"></ion-toggle>
       </ion-item>
       <br> 

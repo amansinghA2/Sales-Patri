@@ -29,20 +29,7 @@ subscription:any;
         });
 
         
-        Observable.interval(1000 * 5).subscribe(x => {
-            if(this.isNetworkConnected){
-                // this.geolocation.getCurrentPosition().then((position) => {
-                //     alert("aaa")
-                //   }, (err) => {
-                //    this.locationConfirm();
-                //     console.log("ayay" + JSON.stringify(err));
-                //   });
-            }else{
-
-            }
-          });
-
-        // this.OpenMyDatabase();
+    
     }
 
     profileModal: any;
@@ -134,7 +121,7 @@ subscription:any;
                 + ' (id integer primary key AUTOINCREMENT, whatsnew_date TEXT, whatsnew_emp_id integer, whatsnew_content TEXT , whatsnew_created_on TEXT , whatsnew_updated_on TEXT)', {})
 
             db.executeSql('CREATE TABLE IF NOT EXISTS ' + this.m_Notifications
-                + ' (id integer primary key AUTOINCREMENT, notification_id integer, notification_from integer, notification_to integer , notification_redirect_url TEXT , notification_title TEXT, notification_descripiton TEXT , notification_is_unread integer , notification_created_on TEXT , notification_updated_on TEXT)', {})
+                + ' (id integer primary key AUTOINCREMENT, notification_id integer, notification_from integer, notification_to integer , notification_redirect_url TEXT , notification_title TEXT, notification_descripiton TEXT , notification_is_unread integer , notification_created_on TEXT , notification_updated_on TEXT , notification_isread TEXT , notification_activitytype TEXT , notification_scheduled_type TEXT)', {})
 
             db.executeSql('CREATE TABLE IF NOT EXISTS ' + this.m_user_session
                 + ' (id integer primary key AUTOINCREMENT, session_id integer, activity TEXT, user_id integer , device_name TEXT , device_os TEXT, device_full_serial_no TEXT, status integer , created_on TEXT)', {})
@@ -306,7 +293,7 @@ subscription:any;
                     break;
                 case this.m_Notifications:
                     //  var dataArray = {"notification_id": 1 ,"notification_from":this.dateTime , "notification_to":this.whichtype, "notification_redirect_url":this.meetingPerson ,"notification_title":'AB',"notification_descripiton":'AB',"notification_is_unread":'AB',"notification_created_on":'AB',"notification_updated_on":''}
-                    db.executeSql('INSERT OR REPLACE INTO ' + this.m_Notifications + ' (notification_id, notification_from ,notification_to, notification_redirect_url ,notification_title, notification_descripiton ,notification_is_unread, notification_created_on ,notification_updated_on) VALUES (?,?,?,?,?,?,?,?,?)', [dataArray['notification_id'], dataArray['notification_from'], dataArray['notification_to'], dataArray['notification_redirect_url'], dataArray['notification_title'], dataArray['notification_descripiton'], dataArray['notification_is_unread'], dataArray['notification_created_on'], dataArray['notification_updated_on']])
+                    db.executeSql('INSERT OR REPLACE INTO ' + this.m_Notifications + ' (notification_id, notification_from ,notification_to, notification_redirect_url ,notification_title, notification_descripiton ,notification_is_unread, notification_created_on ,notification_updated_on ,notification_isread , notification_activitytype ,notification_scheduled_type) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)', [dataArray['notification_id'], dataArray['notification_from'], dataArray['notification_to'], dataArray['notification_redirect_url'], dataArray['notification_title'], dataArray['notification_descripiton'], dataArray['notification_is_unread'], dataArray['notification_created_on'], dataArray['notification_updated_on'] , dataArray['notification_isread'] , dataArray['notification_activitytype'] , dataArray['notification_scheduled_type'] ])
                         .then(res => {
                             console.log("m_Notifications inserted");
                         })

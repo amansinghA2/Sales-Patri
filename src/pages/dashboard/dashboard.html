@@ -5,13 +5,13 @@
         <ion-icon name="menu"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-title>
+    <ion-title >
       DASHBOARD
     </ion-title>
     <ion-buttons end>
-      <button (click)="showNotifications()" id="notification-button" ion-button icon-only>
+      <button (click)="showNotifications()" id="notification-button" ion-button icon-only >
         <ion-icon name="notifications">
-          <ion-badge id="notifications-badge" color="danger">{{notificationList.length}}</ion-badge>
+            <ion-badge *ngIf="isnotificationseen === 'true'" id="notifications-badge" color="danger">{{notificationCount}}</ion-badge>
         </ion-icon>
       </button>
     </ion-buttons>
@@ -67,7 +67,7 @@
             </ion-col>
           </ion-row>
         </ion-card>
-        <div *ngIf="pgn != 4">
+        <div *ngIf="whichList != 4">
           <div *ngFor="let item of listStatus;let i = index">
             <div *ngIf="item == 'SCHEDULED' ">
               <ion-label style="padding-left:10vw">
@@ -132,6 +132,14 @@
                     </ion-col>
                   </ion-row>
                 </div>
+                <ion-row  *ngIf="item.activity_output_end_datetime > currenTime && item.next_activity_id == '' && (item.activity_status == 'OPEN' || item.activity_status == 'POSTPONE') && countArray[0] > 1" style="margin-left:8vw;">
+                  <ion-col class="imgcol" text-center>
+                    <span class="image"> </span>
+                  </ion-col>
+                  <ion-col class="imgcol" text-center>
+                    <span class="image" text-center> </span>
+                  </ion-col>
+                </ion-row>
               </ion-list>
             </div>
 
@@ -199,9 +207,16 @@
                   <!-- <img  src="assets/imgs/thread.png"  width="10" height="10" alt="" class=""> -->
                   <!-- <img  src="assets/imgs/thread.png" class= "dashlistthreadiconimgleft" width="1" height="10" alt="" class=""> -->
                 </div>
+                <ion-row  *ngIf="item.activity_output_end_datetime <= currenTime && item.next_activity_id == '' && (item.activity_status == 'OPEN' || item.activity_status == 'POSTPONE') && countArray[1] > 1" style="margin-left:8vw;">
+                  <ion-col class="imgcol" text-center>
+                    <span class="image"> </span>
+                  </ion-col>
+                  <ion-col class="imgcol" text-center>
+                    <span class="image" text-center> </span>
+                  </ion-col>
+                </ion-row>
               </ion-list>
             </div>
-
             <div *ngIf="item == 'COMPLETED'">
               <ion-label style="padding-left:10vw">
                 <b>{{item}} ({{countArray[2]}})</b>
@@ -265,14 +280,22 @@
                   <ion-row>
                   </ion-row>
                 </div>
+                <ion-row  *ngIf="item.activity_output_type != '' && countArray[2] > 1" style="margin-left:8vw;">
+                  <ion-col class="imgcol" text-center>
+                    <span class="image"> </span>
+                  </ion-col>
+                  <ion-col class="imgcol" text-center>
+                    <span class="image" text-center> </span>
+                  </ion-col>
+                </ion-row>
               </ion-list>
             </div>
             <hr style="border: 0.5px solid lightgray">
           </div>
         </div>
-        <div *ngIf="pgn == 4">
+        <div *ngIf="whichList == 4">
           <ion-list *ngFor="let item of recordsList;let i = index" no-padding>
-            <div no-padding class="listdesign" no-padding *ngIf="item.activity_output_end_datetime <= currenTime && item.activity_output_type == '' ">
+            <div no-padding class="listdesign" no-padding *ngIf="item.activity_output_end_datetime <= currenTime && item.next_activity_id == '' && (item.activity_status == 'OPEN' || item.activity_status == 'POSTPONE')">
 
               <img *ngIf="item.activity_scheduled_type === 'L' && item.activity_type === 'Meeting' " src="assets/icon/L_blue2.png" alt=""
                 class="dashlisticonimg">
@@ -328,6 +351,14 @@
                 </ion-col>
               </ion-row>
             </div>
+            <ion-row  *ngIf="item.activity_output_end_datetime <= currenTime && item.next_activity_id == '' && (item.activity_status == 'OPEN' || item.activity_status == 'POSTPONE')">
+              <ion-col class="imgcol" text-center>
+                <span class="image"> </span>
+              </ion-col>
+              <ion-col class="imgcol" text-center>
+                <span class="image" text-center> </span>
+              </ion-col>
+            </ion-row>
           </ion-list>
         </div>
       </div>

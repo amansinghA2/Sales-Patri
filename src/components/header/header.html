@@ -1,9 +1,6 @@
 <!-- Generated template for the HeaderComponent component -->
-<ion-header>
-    <ion-navbar color="purplecolor">
-      <button ion-button menuToggle>
-        <ion-icon name="menu"></ion-icon>
-      </button>
-      <ion-title >{{title}}</ion-title>
-    </ion-navbar>
-</ion-header>
+<button (click)="showNotifications()" id="notification-button" ion-button icon-only color="purplecolor">
+  <ion-icon name="notifications">
+      <ion-badge *ngIf="isnotificationseen === 'true'" id="notifications-badge" color="danger">{{notificationCount}}</ion-badge>
+  </ion-icon>
+</button>

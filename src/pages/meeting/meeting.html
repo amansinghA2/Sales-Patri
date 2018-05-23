@@ -5,15 +5,11 @@
         <ion-icon name="menu"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-title>
+    <ion-title class="titlepadding" style="padding-top:2.5vh">
       SCHEDULE MEETING
     </ion-title>
     <ion-buttons end>
-      <button (click)="showNotifications()" id="notification-button" ion-button icon-only>
-        <ion-icon name="notifications">
-          <ion-badge id="notifications-badge" color="danger">{{notificationList.length}}</ion-badge>
-        </ion-icon>
-      </button>
+      <header></header>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -113,7 +109,7 @@
     <hr>
     <ion-row no-padding>
       <ion-col col-11>
-        <ion-searchbar no-padding [(ngModel)]="meetingPerson" (ionInput)="getPersonsList($event)" placeholder="Meeting Person"></ion-searchbar>
+        <ion-searchbar no-padding  [(ngModel)]="meetingPerson" (ionInput)="getPersonsList($event)" placeholder="Meeting Person"></ion-searchbar>
         <ion-list *ngIf="showList == true" no-lines>
           <ion-item no-lines *ngFor="let item of contactList" (click)="personClicked(item)" class="ionitema">
             Name : {{ item.contact_name }}
@@ -131,7 +127,7 @@
     </ion-row>
     <hr>
     <ion-row no-padding>
-      <ion-col>
+      <ion-col >
         <ion-searchbar no-padding [(ngModel)]="address" (ionInput)="updateSearchResults()" placeholder="Search for a place"></ion-searchbar>
         <ion-list [hidden]="autocompleteItems.length == 0">
           <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)" class="ionitema">
@@ -150,7 +146,7 @@
     </ion-item>
     <hr>
     <ion-item no-lines>
-      <ion-label class="labelfonts">Leader</ion-label>
+      <ion-label class="labelfonts">Team Leader Required?</ion-label>
       <ion-toggle [(ngModel)]="isLeader" color="purplecolor"></ion-toggle>
     </ion-item>
     <br> 

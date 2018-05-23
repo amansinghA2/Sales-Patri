@@ -12,14 +12,10 @@
         <ion-icon name="menu"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-title *ngIf="item.activity_type == 'Meeting'"> MEETING INFO</ion-title>
-    <ion-title *ngIf="item.activity_type == 'Call'"> CALL INFO</ion-title>
+    <ion-title class="titlepadding" style="padding-top:2.5vh" *ngIf="item.activity_type == 'Meeting'"> MEETING INFO</ion-title>
+    <ion-title class="titlepadding" style="padding-top:2.5vh" *ngIf="item.activity_type == 'Call'"> CALL INFO</ion-title>
     <ion-buttons end>
-      <button (click)="showNotifications()" id="notification-button" ion-button icon-only>
-        <ion-icon name="notifications">
-          <ion-badge id="notifications-badge" color="danger">{{notificationList.length}}</ion-badge>
-        </ion-icon>
-      </button>
+      <header></header>
     </ion-buttons>
   </ion-navbar>
 </ion-header>

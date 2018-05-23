@@ -43,7 +43,7 @@ export class DashboardPage implements OnInit{
   listOptionColor;
   minDate: String;
   totalRecords = [];
-
+  isnotificationseen:any;
   countArrayData = [];
 
   clickList: Array<{ pgn: number, icon: string, title: string, color: string ,count:number}>;
@@ -53,6 +53,7 @@ export class DashboardPage implements OnInit{
   pgn = 0 ;
   notificationList:any;
   sourceListArray:any;
+  notificationCount = 0;
 
   constructor(private platform: Platform, public sqlite: SQLite, public navCtrl: NavController, public globals: Globals, public storage: Storage, public menu: MenuController,public events:Events) {
 
@@ -60,6 +61,26 @@ export class DashboardPage implements OnInit{
 
       var sql = 'SELECT * from ' + this.globals.m_Notifications;
       this.notificationList = this.globals.selectTables(sql);
+
+      setTimeout(() => {
+
+        this.storage.get('isseennotification').then((val) => {
+          this.isnotificationseen = val;
+        })
+
+        console.log(JSON.stringify(this.notificationList));
+        
+        for(let i = 0 ; i < this.notificationList.length ; i++){
+            // this.notificationList[i]['notification_isread'] == '1';
+          // 'notification_isread':'0'  , 'notification_activitytype': 'Meeting'
+          if(this.notificationList[i]['notification_isread'] == '0'){
+              this.notificationCount++;
+          }
+  
+        }
+
+
+      }, 200);
 
       this.clickList = [
         { pgn: 0, icon: 'fas fa-universal-access fa-1xx', title: 'All', color: 'black' , count:0},
@@ -69,9 +90,13 @@ export class DashboardPage implements OnInit{
         { pgn: 4, icon: 'fas fa-edit fa-1xx', title: 'Pending', color: 'gray' , count:0}
       ];
 
+
+   
+
     });
 
   }
+
 
   ngOnInit(){
 
@@ -93,6 +118,56 @@ export class DashboardPage implements OnInit{
       this.myDate = moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ');
       this.myTime = moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ');
       this.currenTime = this.globals.getDate(this.myDate, 'dd/MM/yyyy') + "    " + this.globals.getDate(this.myTime, 'HH:mm');
+   
+      setTimeout(() => {
+
+        var cnt1 = 0;
+        var cnt2 = 0;
+        var cnt3 = 0;
+  
+        for(var i = 0 ; i < this.recordsList.length ; i++){
+          
+          if(this.recordsList[i]['activity_output_end_datetime'] > this.currenTime && this.recordsList[i]['next_activity_id'] == '' && (this.recordsList[i]['activity_status'] == 'OPEN' || this.recordsList[i]['activity_status'] == 'POSTPONE')){
+             cnt1++;
+           }else if(this.recordsList[i]['activity_output_end_datetime'] <= this.currenTime && this.recordsList[i]['next_activity_id'] == '' && (this.recordsList[i]['activity_status'] == 'OPEN' || this.recordsList[i]['activity_status'] == 'POSTPONE')){
+             cnt2++;
+           }else if(this.recordsList[i]['activity_output_type'] != '' && (this.recordsList[i]['activity_status'] == 'CANCEL' || this.recordsList[i]['activity_status'] == 'ATTENDED')){
+            cnt3++;
+           }
+   
+         }
+  
+      this.countArray = [cnt1 , cnt2 , cnt3];
+  
+  
+      this.clickList[0]['count'] = 0;
+      this.clickList[1]['count'] = 0;
+      this.clickList[2]['count'] = 0;
+      this.clickList[3]['count'] = 0;
+      this.clickList[4]['count'] = 0;
+  
+        for(var i = 0 ; i < this.totalRecords.length ; i++){
+       
+          if(this.totalRecords[i]['activity_date_time'] >= this.setmyDateFrom && this.totalRecords[i]['activity_date_time'] <= this.setmyDateTo && this.totalRecords[i]['activity_status'] != 'ATTENDED'){
+            this.clickList[0]['count']++;
+           }
+           if(this.totalRecords[i]['activity_date_time'] >= this.setmyDateFrom && this.totalRecords[i]['activity_date_time'] <= this.setmyDateTo && this.totalRecords[i]['dash_optionid'] == '1' && this.totalRecords[i]['activity_status'] != 'ATTENDED'){
+            this.clickList[1]['count']++;
+           }
+           if(this.totalRecords[i]['activity_date_time'] >= this.setmyDateFrom && this.totalRecords[i]['activity_date_time'] <= this.setmyDateTo && this.totalRecords[i]['dash_optionid'] == '2' && this.totalRecords[i]['activity_status'] != 'ATTENDED'){
+            this.clickList[2]['count']++;
+           }
+            if(this.totalRecords[i]['activity_date_time'] >= this.setmyDateFrom && this.totalRecords[i]['activity_date_time'] <= this.setmyDateTo && this.totalRecords[i]['dash_optionid'] == '3' && this.totalRecords[i]['activity_status'] != 'ATTENDED'){
+            this.clickList[3]['count']++;
+           }
+           if(this.totalRecords[i]['activity_output_end_datetime'] <= this.currenTime && this.totalRecords[i]['next_activity_id'] == '' && (this.totalRecords[i].activity_status == 'OPEN' || this.totalRecords[i].activity_status == 'POSTPONE')){
+            this.clickList[4]['count']++;
+           }
+
+         }
+     
+      }, 200);
+
     });
     
 
@@ -141,7 +216,7 @@ export class DashboardPage implements OnInit{
           if(this.countArrayData[i]['activity_date_time'] >= this.setmyDateFrom && this.countArrayData[i]['activity_date_time'] <= this.setmyDateTo && this.countArrayData[i]['dash_optionid'] == '3' && this.countArrayData[i]['activity_status'] != 'ATTENDED'){
           this.clickList[3]['count']++;
          }
-         if(this.countArrayData[i]['activity_output_end_datetime'] <= this.currenTime && this.countArrayData[i]['activity_output_type'] == ''){
+         if(this.countArrayData[i]['activity_output_end_datetime'] <= this.currenTime && this.countArrayData[i]['next_activity_id'] == '' && (this.countArrayData[i].activity_status == 'OPEN' || this.countArrayData[i].activity_status == 'POSTPONE')){
           this.clickList[4]['count']++;
          }
  
@@ -239,7 +314,7 @@ export class DashboardPage implements OnInit{
           if(this.totalRecords[i]['activity_date_time'] >= this.setmyDateFrom && this.totalRecords[i]['activity_date_time'] <= this.setmyDateTo && this.totalRecords[i]['dash_optionid'] == '3' && this.totalRecords[i]['activity_status'] != 'ATTENDED'){
           this.clickList[3]['count']++;
          }
-         if(this.totalRecords[i]['activity_output_end_datetime'] <= this.currenTime && this.totalRecords[i]['activity_output_type'] == ''){
+         if(this.totalRecords[i]['activity_output_end_datetime'] <= this.currenTime && this.totalRecords[i]['next_activity_id'] == '' && (this.totalRecords[i].activity_status == 'OPEN' || this.totalRecords[i].activity_status == 'POSTPONE')){
           this.clickList[4]['count']++;
          }
    

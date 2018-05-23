@@ -19,7 +19,7 @@ page-dashboard {
     border:1.5px solid #9498b6;
     background: #d2d5e9;
     border-radius: 2vw;
-    margin:2vh;
+    margin-right:0.5vh;
     margin-left:8vw; 
     padding:1.5vh;
 }
@@ -60,6 +60,19 @@ ion-icon icon{
    color:white;
    margin-top:1.5vh;
 }
+
+.image {
+    // overflow: hidden;
+    // display: block;
+    width:10%;
+    text-align: center;
+    content:url('./../assets/imgs/thread.png');
+    }
+
+    .imgcol{
+        margin-top:-6.5%;
+        margin-bottom:-6.5%;
+    }
 
 
 }

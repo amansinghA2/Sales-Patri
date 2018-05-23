@@ -6,21 +6,17 @@
 -->
 <ion-header>
     <ion-navbar hideBackButton color="purplecolor">
-        <ion-buttons start>
-            <button ion-button menuToggle >
-                <ion-icon name="menu"></ion-icon>
-              </button>
-          </ion-buttons>
-          <ion-title>
-              LEAD DETAILS
-          </ion-title>
-          <ion-buttons end>
-                <button (click)="showNotifications()" id="notification-button" ion-button icon-only>
-                        <ion-icon name="notifications">
-                            <ion-badge id="notifications-badge" color="danger">{{notificationList.length}}</ion-badge>
-                        </ion-icon>
-                    </button>
-          </ion-buttons>
+      <ion-buttons start>
+        <button ion-button menuToggle>
+          <ion-icon name="menu"></ion-icon>
+        </button>
+      </ion-buttons>
+      <ion-title class="titlepadding" style="padding-top:2.5vh">
+        LEAD DETAILS
+      </ion-title>
+      <ion-buttons end>
+        <header></header>
+      </ion-buttons>
     </ion-navbar>
   </ion-header>
 

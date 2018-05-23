@@ -6,21 +6,17 @@
 -->
 <ion-header>
     <ion-navbar hideBackButton color="purplecolor">
-        <ion-buttons start>
-            <button ion-button menuToggle >
-                <ion-icon name="menu"></ion-icon>
-              </button>
-          </ion-buttons>
-          <ion-title>
-              GOALS LIST
-          </ion-title>
-          <ion-buttons end>
-                <button (click)="showNotifications()" id="notification-button" ion-button icon-only>
-                        <ion-icon name="notifications">
-                            <ion-badge id="notifications-badge" color="danger">{{notificationList.length}}</ion-badge>
-                        </ion-icon>
-                    </button>
-          </ion-buttons>
+      <ion-buttons start>
+        <button ion-button menuToggle>
+          <ion-icon name="menu"></ion-icon>
+        </button>
+      </ion-buttons>
+      <ion-title class="titlepadding" style="padding-top:2.5vh">
+        GOALS LIST
+      </ion-title>
+      <ion-buttons end>
+        <header></header>
+      </ion-buttons>
     </ion-navbar>
   </ion-header>
 
@@ -28,8 +24,12 @@
 <ion-content no-padding class="appbackcolor">
 
 
-        <div no-padding *ngIf="goalsListArray.length != 0">
-                <ion-row *ngFor="let list of goalsListArray" (click)="goalsClicked(list)" class="sourceleadlistdesign" no-padding>
+    <div padding>
+        <ion-searchbar no-padding [(ngModel)]="selectedItem" (ionInput)="updateSubtypeSearchResult($event)" placeholder="Search Goal By ID"></ion-searchbar>
+    </div>
+
+        <div no-padding *ngIf="selectedgoalsListArray.length != 0">
+                <ion-row *ngFor="let list of selectedgoalsListArray" (click)="goalsClicked(list)" class="sourceleadlistdesign" no-padding>
                     <ion-col col-5>
                         GOAL ID  :
                         <br> 
