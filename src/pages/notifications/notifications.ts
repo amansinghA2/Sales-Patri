@@ -4,7 +4,6 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Globals } from '../../app/globals';
 import { SQLiteObject, SQLite } from '@ionic-native/sqlite';
 
-
 /**
  * Generated class for the NotificationsPage page.
  *

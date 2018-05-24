@@ -96,7 +96,7 @@ export class SchedulecallPage {
     this.myDate = moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ');
     this.myTime = moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ');
 
-    this.selectedDate = this.globals.getDate(this.myDate, 'dd/MM/yyyy')
+    this.selectedDate = moment.utc().local().format('YYYY-MM-DD');
     this.selectedTime = moment.utc().local().format('hh:mm a');
 
     this.dateTime = this.globals.getDate(this.myDate, 'dd/MM/yyyy') + "    " + this.globals.getDate(this.myTime, 'HH:mm'); this.pushDateString = moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ');
@@ -426,7 +426,7 @@ export class SchedulecallPage {
   }
 
   fromDateData() {
-    this.selectedDate = this.globals.getDate(this.myDate, 'dd/MM/yyyy')
+    this.selectedDate = moment.utc(this.myDate).local().format('YYYY-MM-DD');
     this.dateTime = this.globals.getDate(this.myDate, 'dd/MM/yyyy') + "    " + this.globals.getDate(this.myTime, 'HH:mm');
     this.pushDateString = moment.utc(this.myDate).local().format('YYYY-MM-DDT') + moment.utc(this.myTime).local().format('HH:mm:ssZ');
   }

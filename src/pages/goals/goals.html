@@ -5,63 +5,85 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-    <ion-navbar hideBackButton color="purplecolor">
-      <ion-buttons left>
-        <button ion-button menuToggle>
-          <ion-icon name="menu"></ion-icon>
-        </button>
-      </ion-buttons>
-      <ion-title  text-center>
-        GOALS LIST
-      </ion-title>
-      <ion-buttons right>
-        <header></header>
-      </ion-buttons>
-    </ion-navbar>
-  </ion-header>
+  <ion-navbar hideBackButton color="purplecolor">
+    <ion-buttons left>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title text-center>
+      GOALS LIST
+    </ion-title>
+    <ion-buttons right>
+      <header></header>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
 
 
 <ion-content no-padding class="appbackcolor">
 
+  <!-- <div padding>
+    <ion-searchbar no-padding [(ngModel)]="selectedItem" (ionInput)="updateSubtypeSearchResult($event)" placeholder="Search Goal By ID"></ion-searchbar>
+  </div> -->
 
-    <div padding>
-        <ion-searchbar no-padding [(ngModel)]="selectedItem" (ionInput)="updateSubtypeSearchResult($event)" placeholder="Search Goal By ID"></ion-searchbar>
-    </div>
+  <ion-card class="datediv" no-padding>
+      <ion-row class="datedivpadding">
+        <ion-col padding col-2>
+          <i class="datecalendarcolor" class="fas fa-calendar fa-2x"></i>
+        </ion-col>
+        <ion-col no-padding col-5>
+          <ion-item class="datediv">
+            <ion-label class="dateleftpadding datelabelfont" style="color:black" no-padding floating>From</ion-label>
+            <ion-datetime displayFormat="DD MMM YYYY" no-padding [(ngModel)]="myDateFrom" (ionChange)="fromDateData()" [min]="2000" [max]="2099"
+              class="labelfonts"></ion-datetime>
+          </ion-item>
+        </ion-col>
+        <ion-col no-padding col-5>
+          <ion-item class="datediv">
+            <ion-label class="dateleftpadding datelabelfont" style="color:black" no-padding floating>To</ion-label>
+            <ion-datetime displayFormat="DD MMM YYYY" [(ngModel)]="myDateTo" no-padding (ionChange)="toDateData()" [min]="myDateFrom"
+              [max]="2099" class="labelfonts"></ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-card>
 
-        <div no-padding *ngIf="selectedgoalsListArray.length != 0">
-                <ion-row *ngFor="let list of selectedgoalsListArray" (click)="goalsClicked(list)" class="sourceleadlistdesign" no-padding>
-                    <ion-col col-5>
-                        GOAL ID  :
-                        <br> 
-                        GOAL TITLE :
-                    </ion-col>
-                    <ion-col col-7>
-                        {{list.goal_id}}
-                        <br> 
-                        {{list.goal_title}}
-                    </ion-col>
-                </ion-row>
-                <hr>
-            </div>
+
+  <div no-padding *ngIf="selectedgoalsListArray.length != 0">
+    <ion-row *ngFor="let list of selectedgoalsListArray" (click)="goalsClicked(list)" class="sourceleadlistdesign" no-padding>
+      <ion-col col-5>
+       <b>GOAL ID :
+        <br> GOAL TITLE :
+        <br> GOAL DEADLINE : </b> 
+      </ion-col>
+      <ion-col col-7>
+        {{list.goal_id}}
+        <br> {{list.goal_title}}
+        <br>  {{list.goal_deadline}}
+      </ion-col>
+    </ion-row>
+    <hr>
+  </div>
 
 
-    <!-- <ion-card class="ioncardcss"> -->
-        <!-- <ion-list *ngFor="let data of goalsListArray" padding> -->
-          <!-- <div no-lines text-left *ngFor="let data of goalsListArray" class="sourceleadlistdesign" padding>
+  <!-- <ion-card class="ioncardcss"> -->
+  <!-- <ion-list *ngFor="let data of goalsListArray" padding> -->
+  <!-- <div no-lines text-left *ngFor="let data of goalsListArray" class="sourceleadlistdesign" padding>
              <b>GOAL ID  : </b> {{data.goal_id}}  <br>
              <b>GOAL TITLE :</b> : {{data.goal_title}} -->
-               <!-- {{data.goal_description}} <br><br>
+  <!-- {{data.goal_description}} <br><br>
               <b>Tasks :</b> <br>
               {{data.tasks}} <br><br> 
               <b>Escalated to manager : </b>  {{data.escalated_to_manager}} <br><br>
               <b>Goal Deadline : </b>  {{data.goal_deadline}} <br><br> 
               <b>Achieved Status (Y/N) : </b> <span *ngIf="data.achieved_status == 0">  No </span> <span *ngIf="data.achieved_status == 1">  Yes </span> <br><br>
               <b>Remarks : </b>  {{data.remarks}}  -->
-          <!-- </div> -->
-        <!-- </ion-list> -->
-    <!-- </ion-card> -->
+  <!-- </div> -->
+  <!-- </ion-list> -->
+  <!-- </ion-card> -->
 
 </ion-content>
 
 <floating-button> </floating-button>
-<footerbar>  </footerbar>
+<footerbar> </footerbar>

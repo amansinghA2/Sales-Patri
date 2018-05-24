@@ -105,13 +105,14 @@ export class LoginPage {
 
                   this.globals.deleteTable(this.globals.m_Source_Master);
                   this.globals.deleteTable(this.globals.m_Lead_Master);
+                  this.globals.deleteTable(this.globals.m_Activities);
 
                   let seq = this.api.get('getSources/' + val1, '', { 'Content-Type': 'application/x-www-form-urlencoded' }).share();
                   let seq1 = this.api.get('getLeads/' + val1, '', { 'Content-Type': 'application/x-www-form-urlencoded' }).share();
                   let seq2 = this.api.get('goallist/' + val1, '', { 'Content-Type': 'application/x-www-form-urlencoded' }).share();
-                  // let seq3 = this.api.get('getLeads/'  + val1, '', { 'Content-Type': 'application/x-www-form-urlencoded' }).share(); 
+                  let seq3 = this.api.get('getActivity/'  + val1, '', { 'Content-Type': 'application/x-www-form-urlencoded' }).share(); 
 
-                  forkJoin([seq, seq1, seq2]).subscribe(results => {
+                  forkJoin([seq, seq1, seq2 , seq3]).subscribe(results => {
 
                     if (results[0]['items'].length > 0) {
                       for (let i = 0; i < results[0]['items'].length; i++) {
@@ -122,7 +123,7 @@ export class LoginPage {
 
                     if (results[1]['items'].length > 0) {
                       for (let i = 0; i < results[1]['items'].length; i++) {
-                        var dataArray1 = { "lead_no": results[1]['items'][i]['lead_no'], "lead_company": results[1]['items'][i]['lead_company'], "name": results[1]['items'][i]['name'], "branch": results[1]['items'][i]['branch'], "source_type": results[1]['items'][i]['source_type'], "sub_source": results[1]['items'][i]['sub_source'], "last_action_date": results[1]['items'][i]['last_action_date'] }
+                        var dataArray1 = { "lead_no": results[1]['items'][i]['lead_no'], "lead_company": results[1]['items'][i]['lead_company'], "name": results[1]['items'][i]['name'], "branch": results[1]['items'][i]['branch'], "source_type": results[1]['items'][i]['source_type'], "sub_source": results[1]['items'][i]['sub_source'], "last_action_date": results[1]['items'][i]['last_action_date'] , "lead_status_code": results[1]['items'][i]['lead_status_code'] , "lead_status": results[1]['items'][i]['lead_status']}
                         this.globals.updateTables('', this.globals.m_Lead_Master, dataArray1);
                       }
                     }
@@ -133,6 +134,19 @@ export class LoginPage {
                         this.globals.updateTables('', this.globals.m_Goals_Master, dataArray2);
                       }
                     }
+
+
+                    if (results[3]['items'].length > 0) {
+                      for (let i = 0; i < results[3]['items'].length; i++) {
+                        var dataArray3 = {"activity_date_time": results[3]['items'][i]['activity_date_time'], "activity_type": results[3]['items'][i]['activity_type'], "activity_person_name": results[3]['items'][i]['activity_person_name'],"activity_scheduled_type": results[3]['items'][i]['activity_scheduled_type'], "activity_ref_id": results[3]['items'][i]['activity_ref_id'], "activity_location": results[3]['items'][i]['activity_location'], "activity_latitude": results[3]['items'][i]['activity_latitude'], "activity_longitude": results[3]['items'][i]['activity_longitude'], "activity_city": results[3]['items'][i]['activity_city'], "current_lat": results[3]['items'][i]['current_lat'], "current_lng": results[3]['items'][i]['current_lng'], "current_loc": results[3]['items'][i]['current_loc'], "activity_description": results[3]['items'][i]['activity_description'], "activity_status": results[3]['items'][i]['activity_status'], "activity_output_type": results[3]['items'][i]['activity_output_type'], "activity_output_remarks": results[3]['items'][i]['activity_output_remarks'], "activity_output_end_datetime": results[3]['items'][i]['activity_output_end_datetime'], "next_activity_id": results[3]['items'][i]['next_activity_id'], "activity_created_on": results[3]['items'][i]['activity_created_on'], "activity_updated_on": results[3]['items'][i]['activity_updated_on'], "activity_created_by": results[3]['items'][i]['activity_created_by'], "activity_updated_by": results[3]['items'][i]['activity_updated_by'],
+                        "client_id": results[3]['items'][i]['client_id'],
+                        "contact_id": results[3]['items'][i]['contact_id'],
+                        "team_leader": results[3]['items'][i]['team_leader'], 
+                      }
+                        this.globals.updateTables('', this.globals.m_Activities, dataArray3);
+                      }
+                    }
+
 
                   })
 
@@ -154,7 +168,6 @@ export class LoginPage {
 
         }
       });
-
     } else {
       let toast = this.toastCtrl.create({
         message: 'Check Your Internet connection',

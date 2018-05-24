@@ -5,43 +5,45 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-    <ion-navbar hideBackButton color="purplecolor">
-      <ion-buttons left>
-        <button ion-button menuToggle>
-          <ion-icon name="menu"></ion-icon>
-        </button>
-      </ion-buttons>
-      <ion-title  text-center>
-        LEAD LIST
-      </ion-title>
-      <ion-buttons right>
-        <header></header>
-      </ion-buttons>
-    </ion-navbar>
-  </ion-header>
+  <ion-navbar hideBackButton color="purplecolor">
+    <ion-buttons left>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title text-center>
+      LEAD LIST
+    </ion-title>
+    <ion-buttons right>
+      <header></header>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
 
 
-<ion-content no-padding class="appbackcolor">
+<ion-content no-padding class="appbackcolor" >
 
-  <div padding>
-    <ion-searchbar no-padding [(ngModel)]="selectedItem" (ionInput)="updateSubtypeSearchResult($event)" placeholder="Search Leads Here"></ion-searchbar>
+  <ion-card class="ioncardcss">
+    <ion-row text-center >
+      <ion-col  text-center class="vertical-align-content" *ngFor="let p of clickList" (click)="allDataList(p)" [style.color]="p.color">
+        <label  style="font-size: 3vw;text-align: center;"> <b> {{p.title}}({{p.count}}) </b> </label>
+      </ion-col>
+    </ion-row>
+  </ion-card>
+
+  <div no-padding *ngIf="selectedLeadLIstArray.length != 0">
+    <ion-row *ngFor="let list of selectedLeadLIstArray" (click)="leadClicked(list)" class="sourceleadlistdesign" no-padding>
+      <ion-col col-3>
+        Lead No :
+        <br> Name :
+      </ion-col>
+      <ion-col col-9>
+        {{list.lead_no}}
+        <br> {{list.name}}
+      </ion-col>
+    </ion-row>
+    <hr>
   </div>
-
-    <div no-padding *ngIf="selectedLeadLIstArray.length != 0">
-        <ion-row *ngFor="let list of selectedLeadLIstArray" (click)="leadClicked(list)" class="sourceleadlistdesign" no-padding>
-            <ion-col col-3>
-                Lead No :
-                <br> 
-                Name :
-            </ion-col>
-            <ion-col col-9>
-                {{list.lead_no}}
-                <br> 
-                {{list.name}}
-            </ion-col>
-        </ion-row>
-        <hr>
-    </div>
 
 </ion-content>
 
