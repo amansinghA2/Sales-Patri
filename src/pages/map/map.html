@@ -1,29 +1,49 @@
 <ion-header>
-    <ion-navbar hideBackButton color="purplecolor">
-      <ion-buttons start>
-        <button ion-button menuToggle>
-          <ion-icon name="menu"></ion-icon>
-        </button>
-      </ion-buttons>
-      <ion-title class="titlepadding" style="padding-top:2.5vh">
-        MAP
-      </ion-title>
-      <ion-buttons end>
-        <header></header>
-      </ion-buttons>
-    </ion-navbar>
-  </ion-header>
+  <ion-navbar hideBackButton color="purplecolor">
+    <ion-buttons left>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title text-center class="vertical-align-content">
+      MAP
+    </ion-title>
+    <ion-buttons right>
+      <header></header>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
 
-<ion-content>
+<ion-content style="padding:2vw" class="appbackcolor">
 
-    <!-- <ion-refresher (ionRefresh)="doRefresh($event)">
-        <ion-refresher-content></ion-refresher-content>
-    </ion-refresher> -->
+  <ion-row text-center style="background: white">
+    <ion-col text-center >
+      <ion-label text-center style="font-weight: bold;color:black">Activities</ion-label>
+    </ion-col>
+    <ion-col col-2 text-center>
+      <ion-toggle text-center (ionChange)="toggleCLicked()" class="vertical-align-content" [(ngModel)]="whichone" color="purplecolor"></ion-toggle>
+    </ion-col>
+    <ion-col>
+      <ion-label style="font-weight: bold;color:black">Sources</ion-label>
+    </ion-col>
+  </ion-row>
 
-    <div #map id="map">
-    </div>
+  <ion-row [hidden]="whichone == true" style="background: white">
+    <ion-col (click)="activitySearchClicked(0)" style="color:black;font-weight: bold" text-center>
+          All({{allcount.length}})
+    </ion-col>
+    <ion-col (click)="activitySearchClicked(1)" style="color:green;font-weight: bold" text-center>
+       Scheduled({{schedulecount.length}})
+    </ion-col>
+    <ion-col (click)="activitySearchClicked(2)" style="color:red;font-weight: bold" text-center>
+       Pending({{sourcescount.length}}) 
+    </ion-col>
+  </ion-row>
 
-    <floating-button> </floating-button>
+  <div #map id="map">
+  </div>
+
 </ion-content>
 
+<floating-button> </floating-button>
 <footerbar></footerbar>

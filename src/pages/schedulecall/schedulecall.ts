@@ -3,19 +3,20 @@ import { User } from './../../providers/user/user';
 import { MeetingupdatePage } from './../meetingupdate/meetingupdate';
 import { Storage } from '@ionic/storage';
 import { LocalNotifications } from '@ionic-native/local-notifications';
-import { MapPage } from './../map/map';
 import { Globals } from './../../app/globals';
-import { HttpModule, Http } from '@angular/http';
-import { Component, NgModule, OnInit, NgZone } from '@angular/core';
+import { Http } from '@angular/http';
+import { Component, NgZone } from '@angular/core';
 import { IonicPage, NavController, NavParams, Platform, ToastController, LoadingController } from 'ionic-angular';
 import { ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { MeetingPage } from './../meeting/meeting';
 import { DashboardPage } from './../dashboard/dashboard';
 import moment from 'moment';
 import { NotificationsPage } from './../notifications/notifications';
+import { SQLiteObject, SQLite } from '@ionic-native/sqlite';
+import { forkJoin } from "rxjs/observable/forkJoin";
+import { Api } from '../../providers/api/api';
 
 
 /**
@@ -80,8 +81,9 @@ export class SchedulecallPage {
   showListsubtype = false;
   whichname = '';
   seletedItemFromList = false;
+  notificationArray = [];
 
-  constructor(private platform: Platform, public navCtrl: NavController, public navParams: NavParams, public http: Http, public globals: Globals, public cd: ChangeDetectorRef, public localNotifications: LocalNotifications, public toastCtrl?: ToastController, public storage?: Storage, public user?: User, public loadingCtrl?: LoadingController, public zone?: NgZone) {
+  constructor(private platform: Platform, public navCtrl: NavController, public navParams: NavParams, public http: Http, public globals: Globals, public cd: ChangeDetectorRef, public localNotifications: LocalNotifications, public toastCtrl?: ToastController, public storage?: Storage, public user?: User, public loadingCtrl?: LoadingController, public zone?: NgZone, public sqlite?: SQLite , public api?:Api) {
 
     this.pageInit();
 
@@ -96,10 +98,11 @@ export class SchedulecallPage {
     this.myDate = moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ');
     this.myTime = moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ');
 
-    this.selectedDate = this.globals.getDate(this.myDate, 'dd/MM/yyyy')
+    this.selectedDate = moment.utc().local().format('YYYY-MM-DD');
     this.selectedTime = moment.utc().local().format('hh:mm a');
 
-    this.dateTime = this.globals.getDate(this.myDate, 'dd/MM/yyyy') + "    " + this.globals.getDate(this.myTime, 'HH:mm'); this.pushDateString = moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ');
+    // this.dateTime = moment.utc(this.myDate).local().format('YYYY-MM-DD') + " " +  moment.utc(this.myTime).local().format('HH:mm');
+    this.dateTime = moment.utc(this.myDate).local().format('YYYY-MM-DDT') + moment.utc(this.myTime).local().format('HH:mm:ssZ');
 
     this.whichtype = 'Lead Activity';
 
@@ -131,6 +134,7 @@ export class SchedulecallPage {
     if (this.navParams.get('dataArray')) {
       this.contactArray = this.navParams.get('dataArray');
       this.meetingPerson = this.contactArray['contact_name'];
+      this.selectedItem = this.navParams.get('selectedItem');
       this.address = this.contactArray['def_addr'];
       this.latitude = this.contactArray['def_lat'];
       this.longitude = this.contactArray['def_lng'];
@@ -422,18 +426,21 @@ export class SchedulecallPage {
 
 
   addContact() {
-    this.navCtrl.push(ContactPage, { page: 'call' });
+    this.navCtrl.push(ContactPage, { page: 'call' , selectedItem:this.selectedItem });
   }
 
   fromDateData() {
-    this.selectedDate = this.globals.getDate(this.myDate, 'dd/MM/yyyy')
-    this.dateTime = this.globals.getDate(this.myDate, 'dd/MM/yyyy') + "    " + this.globals.getDate(this.myTime, 'HH:mm');
+    this.selectedDate = moment.utc(this.myDate).local().format('YYYY-MM-DD');
+    // this.dateTime = moment.utc(this.myDate).local().format('YYYY-MM-DD') + " " +  moment.utc(this.myTime).local().format('HH:mm');
+    this.dateTime = moment.utc(this.myDate).local().format('YYYY-MM-DDT') + moment.utc(this.myTime).local().format('HH:mm:ssZ');
+
     this.pushDateString = moment.utc(this.myDate).local().format('YYYY-MM-DDT') + moment.utc(this.myTime).local().format('HH:mm:ssZ');
   }
 
   fromTimeData() {
     this.selectedTime = moment.utc(this.myTime).local().format('hh:mm a');
-    this.dateTime = this.globals.getDate(this.myDate, 'dd/MM/yyyy') + "    " + this.globals.getDate(this.myTime, 'HH:mm');
+    // this.dateTime = moment.utc(this.myDate).local().format('YYYY-MM-DD') + " " +  moment.utc(this.myTime).local().format('HH:mm');
+    this.dateTime = moment.utc(this.myDate).local().format('YYYY-MM-DDT') + moment.utc(this.myTime).local().format('HH:mm:ssZ');
     this.pushDateString = moment.utc(this.myDate).local().format('YYYY-MM-DDT') + moment.utc(this.myTime).local().format('HH:mm:ssZ');
   }
 
@@ -504,8 +511,19 @@ export class SchedulecallPage {
 
                 this.globals.setStorage('isseennotification', 'true');
 
-                var notifyArray = { "notification_id": '', "notification_from": '', "notification_to": '', "notification_redirect_url": '', "notification_title": 'Meeting Scheduled', "notification_descripiton": 'Metting with ' + this.meetingPerson + ' scheduled on ' + this.selectedDate + ' at ' + this.selectedTime, "notification_is_unread": '', "notification_created_on": '', "notification_updated_on": '' , 'notification_isread':'0'  , 'notification_activitytype': 'Call' , "notification_scheduled_type": this.typesarray[this.whichtype]};
+                var notifyArray = { "notification_id": '', "notification_from": val, "notification_to": '', "notification_redirect_url": '', "notification_title": 'Meeting Scheduled', "notification_descripiton": 'Call with ' + this.meetingPerson + ' scheduled on ' + this.selectedDate + ' at ' + this.selectedTime, "notification_is_unread": '', "notification_created_on": moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ'), "notification_updated_on": moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ'), 'notification_isread': '0', 'notification_activitytype': 'Call', "notification_scheduled_type": this.typesarray[this.whichtype] };
                 this.globals.updateTables('notification', this.globals.m_Notifications, notifyArray);
+
+                this.sqlite.create({
+                  name: this.globals.dbName,
+                  location: 'default'
+                }).then((db: SQLiteObject) => {
+                  db.executeSql('UPDATE m_ContactDetails SET ref_id=? WHERE id=?', [this.activityrefid, this.contactId])
+                    .then(res => {
+                      console.log("m_ContactDetailsinsert inserted");
+                    })
+
+                })
 
                 if (this.items) {
 
@@ -515,15 +533,24 @@ export class SchedulecallPage {
                   setTimeout(() => {
                     var sql = 'SELECT * from ' + this.globals.m_Activities;
                     this.recordsList = this.globals.selectTables(sql);
+
+                    var sql1 = 'SELECT * from ' + this.globals.m_Notifications;
+                    this.notificationArray = this.globals.selectTables(sql1);
+
                     if (this.globals.isNetworkConnected) {
                       setTimeout(() => {
                         this.storage.get('token').then((val) => {
-                          this.user.postMethod('sync', JSON.stringify(this.recordsList), { 'Authorization': val }).subscribe((resp) => {
 
-                            console.log("Respis" + JSON.stringify(resp));
+                          let seq = this.api.post('sync', JSON.stringify(this.recordsList), { 'Authorizations': val }).share();
+                          let seq1 = this.api.post('notification_sync', JSON.stringify(this.notificationArray), { 'Authorizations': val }).share();
+
+                          forkJoin([seq, seq1]).subscribe(results => {
+
+
                           })
+
                         })
-                      }, 100);
+                      }, 200);
                     } else {
                       let toast = this.toastCtrl.create({
                         message: 'Check Your Internet connection',
@@ -535,7 +562,7 @@ export class SchedulecallPage {
                     }
                     loading.dismiss();
                     this.navCtrl.push(MeetingupdatePage, { val: 'meeting' });
-                  }, 100);
+                  }, 200);
 
                 } else {
 
@@ -550,14 +577,24 @@ export class SchedulecallPage {
                   setTimeout(() => {
                     var sql = 'SELECT * from ' + this.globals.m_Activities;
                     this.recordsList = this.globals.selectTables(sql);
+
+                    var sql1 = 'SELECT * from ' + this.globals.m_Notifications;
+                    this.notificationArray = this.globals.selectTables(sql1);
+
                     if (this.globals.isNetworkConnected) {
                       setTimeout(() => {
                         this.storage.get('token').then((val) => {
-                          this.user.postMethod('sync', JSON.stringify(this.recordsList), { 'Authorization': val }).subscribe((resp) => {
-                            console.log("Respis" + JSON.stringify(resp));
+
+                          let seq = this.api.post('sync', JSON.stringify(this.recordsList), { 'Authorizations': val }).share();
+                          let seq1 = this.api.post('notification_sync', JSON.stringify(this.notificationArray), { 'Authorizations': val }).share();
+
+                          forkJoin([seq, seq1]).subscribe(results => {
+
+
                           })
+
                         })
-                      }, 100);
+                      }, 200);
                     } else {
                       let toast = this.toastCtrl.create({
                         message: 'Check Your Internet connection',
@@ -569,7 +606,7 @@ export class SchedulecallPage {
                     }
                     loading.dismiss();
                     this.navCtrl.push(DashboardPage);
-                  }, 100);
+                  }, 200);
                 }
               });
 

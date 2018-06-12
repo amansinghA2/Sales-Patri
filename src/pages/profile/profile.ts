@@ -13,7 +13,7 @@ import { NotificationsPage } from './../notifications/notifications';
  * Generated class for the ProfilePage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
+ * Ionic pages and navigation¡™.
  */
 
 @IonicPage()
@@ -50,7 +50,6 @@ export class ProfilePage implements OnInit{
       this.storage.get('token').then((val) => {
         this.storage.get('empid').then((val1) => {
         this.user.getMethod('get_user_info/' + '4600'  , { 'Authorization': val }).subscribe((resp) => {
-          console.log(JSON.stringify(resp));
   
         var dataArray;
   
@@ -110,7 +109,8 @@ export class ProfilePage implements OnInit{
       let cameraImageSelector = document.getElementById('camera-image');
       cameraImageSelector.setAttribute('src', this.baseimg);
 
-        this.user.postMethod('upload_profile', JSON.stringify({profile_picture:this.baseimg , }), { 'Content-Type': 'application/x-www-form-urlencoded' }).subscribe((resp) => {
+      this.storage.get('token').then((val) => {
+        this.user.postMethod('upload_profile', JSON.stringify({profile_picture:this.baseimg , }), { 'Authorizations': val }).subscribe((resp) => {
           // console.log(JSON.stringify(resp));
         }, (err) => {
           let toast = this.toastCtrl.create({
@@ -121,6 +121,7 @@ export class ProfilePage implements OnInit{
           //  this.ng4LoadingSpinnerService.hide();
           toast.present();
         });
+      })
     
     }, (err) => {
       alert("Failed to capture image");

@@ -6,6 +6,7 @@ import { NavController, ModalController } from 'ionic-angular';
 import { Component } from '@angular/core';
 import { FabContainer } from 'ionic-angular';
 import { TodoitemPage } from './../../pages/todoitem/todoitem';
+import { AddprojectPage } from './../../pages/addproject/addproject';
 
 /**
  * Generated class for the FloatingButtonComponent component.
@@ -39,7 +40,10 @@ export class FloatingButtonComponent {
       // this.modalPage(TodoitemPage);
       this.navCtrl.push(TodoitemPage);
       break;
-
+      case 'addproject':
+      // this.modalPage(TodoitemPage);
+      this.navCtrl.push(AddprojectPage);
+      break;
     }
 
   }

@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
 import { NotificationsPage } from './../notifications/notifications';
 import { Globals } from '../../app/globals';
-
+// import { Firebase } from '@ionic-native/firebase';
 
 /**
  * Generated class for the FeedbackPage page.

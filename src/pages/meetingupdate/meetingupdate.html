@@ -7,24 +7,23 @@
 
 <ion-header>
   <ion-navbar hideBackButton color="purplecolor">
-    <ion-buttons start>
+    <ion-buttons left>
       <button ion-button menuToggle>
         <ion-icon name="menu"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-title class="titlepadding" style="padding-top:2.5vh" *ngIf="item.activity_type == 'Meeting'"> MEETING UPDATE</ion-title>
-    <ion-title class="titlepadding" style="padding-top:2.5vh" *ngIf="item.activity_type == 'Call'"> CALL UPDATE</ion-title>
-    <ion-buttons end>
-       <header></header>
+    <ion-title text-center *ngIf="item.activity_type == 'Meeting'"> MEETING UPDATE</ion-title>
+    <ion-title text-center *ngIf="item.activity_type == 'Call'"> CALL UPDATE</ion-title>
+    <ion-buttons right>
+      <header></header>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 
 <ion-content scroll="true" class="appbackcolor">
-
   <ion-card>
-    <ion-card>
+    <ion-card no-padding>
       <ion-segment [(ngModel)]="options" color="appbackgroundcolor">
         <ion-segment-button value="attended" ngSelected="selected">
           ATTENDED
@@ -34,96 +33,99 @@
         </ion-segment-button>
       </ion-segment>
     </ion-card>
+
   </ion-card>
 
-  <ion-card [ngSwitch]="options">
-    <ion-list *ngSwitchCase="'attended'">
-      <ion-item>
-        <ion-title *ngIf="item.activity_type == 'Meeting'"> MINUTES OF MEETING</ion-title>
-        <ion-title *ngIf="item.activity_type == 'Call'"> MINUTES OF CALL</ion-title>
-      </ion-item>
-      <ion-item>
-        <ion-textarea placeholder="Description" [(ngModel)]="outputdescriptiontext"></ion-textarea>
-      </ion-item>
-      <ion-item>
-        <ion-label> OUTPUT TYPE</ion-label>
-      </ion-item>
-      <ion-item>
-        <ion-row>
-          <!-- [ngClass]="{'isSelected': !whichtypeArray[i]['selected']}" -->
-          <ion-col *ngFor="let type of whichtypeArray;let i = index" (click)="whichTypeClicked(type)" class="lfdgsqboxcss" [ngClass]="{active: isActive(type)}">
-            <b> {{type}} </b>
+  <div class="iondivcss" no-padding>
+    <div [ngSwitch]="options" no-padding>
+      <ion-list *ngSwitchCase="'attended'">
+        <div no-lines style="padding-top:3% ">
+          <ion-title *ngIf="item.activity_type == 'Meeting'" class="iontitlelabel"> MINUTES OF MEETING</ion-title>
+          <ion-title *ngIf="item.activity_type == 'Call'" class="iontitlelabel"> MINUTES OF CALL</ion-title>
+        </div>
+        <ion-item>
+          <ion-label class="labelcsswopadding" floating> Description * </ion-label>
+          <ion-textarea [(ngModel)]="outputdescriptiontext"></ion-textarea>
+        </ion-item>
+        <ion-label class="labelcss"> OUTPUT TYPE</ion-label>
+        <ion-item no-lines>
+          <ion-row>
+            <ion-col *ngFor="let type of whichtypeArray;let i = index" (click)="whichTypeClicked(type)" class="lfdgsqboxcss" [ngClass]="{active: isActive(type)}">
+              <b> {{type}} </b>
+            </ion-col>
+          </ion-row>
+        </ion-item>
+        <hr>
+        <ion-label class="labelcss"> NEXT ACTION / FOLLOW UP</ion-label>
+        <ion-row no-padding text-center>
+          <ion-col col-6 text-center>
+            <button (click)="scheduleMeeting()" ion-button [style.background]="meetingbuttoncolor">
+              <b>{{meetingbuttontext}}</b>
+            </button>
+          </ion-col>
+          <ion-col col-6 text-center>
+            <button (click)="scheduleCall()" ion-button [style.background]="callbuttoncolor">
+              <b>{{callbuttontext}}</b>
+            </button>
           </ion-col>
         </ion-row>
-      </ion-item>
-      <hr>
-      <ion-item>
-        <ion-label> NEXT ACTION / FOLLOW UP</ion-label>
-      </ion-item>
-      <ion-item no-lines>
-        <ion-row no-padding>
-          <ion-col col-7>
-            <button (click)="scheduleMeeting()" ion-button [style.background]="meetingbuttoncolor">{{meetingbuttontext}}</button>
-          </ion-col>
-          <ion-col col-5>
-            <button (click)="scheduleCall()" ion-button [style.background]="callbuttoncolor">{{callbuttontext}}</button>
-          </ion-col>
-        </ion-row>
-      </ion-item>
-      <ion-item no-lines text-center>
-        OR
-      </ion-item>
-    </ion-list>
-    <ion-list *ngSwitchCase="'cancelpostpone'">
-      <ion-item>
-        <ion-label item-left>
-          <b>REASON FOR CANCELLING/POSTPONING:</b>
+        <ion-label text-center>
+          <b>OR</b>
         </ion-label>
-      </ion-item>
-      <ion-item>
-        <ion-label>Select</ion-label>
-        <ion-select [(ngModel)]="whichtype">
-          <ion-option *ngFor="let item of cancellingReasons" [value]="item">{{item}}</ion-option>
-        </ion-select>
-      </ion-item>
-      <ion-item>
-        <ion-label item-left>
+        <div text-center class="footerbottomargin">
+          <button (click)="updateCancelSubmitCalled()" ion-button color="purplecolor" danger class="buttoncss">
+            <b>Submit</b>
+          </button>
+        </div>
+      </ion-list>
+      <ion-list *ngSwitchCase="'cancelpostpone'">
+        <div no-lines style="padding-top:1% ">
+          <ion-label text-center class="iontitlelabel">
+            <b>REASON FOR CANCELLING/POSTPONING:</b>
+          </ion-label>
+        </div>
+        <ion-item>
+          <ion-label>Select</ion-label>
+          <ion-select [(ngModel)]="whichtype">
+            <ion-option *ngFor="let item of cancellingReasons" [value]="item">{{item}}</ion-option>
+          </ion-select>
+        </ion-item>
+        <!-- <ion-label item-left class="labelcss">
           <b>REMARKS: </b>
+        </ion-label> -->
+        <ion-item>
+          <ion-label class="labelcsswopadding" floating> Description * </ion-label>
+          <ion-textarea [(ngModel)]="descriptiontext"></ion-textarea>
+        </ion-item>
+        <ion-label class="labelcss"> OUTPUT TYPE</ion-label>
+        <ion-item no-lines>
+          <ion-row>
+            <!-- [ngClass]="{'isSelected': !whichtypeArray[i]['selected']}" -->
+            <ion-col *ngFor="let type of whichtypeArray;let i = index" (click)="whichTypeClicked(type)" class="lfdgsqboxcss" [ngClass]="{active: isActive(type)}">
+              <b> {{type}} </b>
+            </ion-col>
+          </ion-row>
+        </ion-item>
+        <hr>
+        <ion-label class="labelcss"> NEXT ACTION / FOLLOW UP</ion-label>
+        <div text-center>
+          <button text-center (click)="reSchedule()" ion-button color="purplecolor" padding class="buttoncss">
+            <b>RESCHEDULE</b>
+          </button>
+        </div>
+        <ion-label no-lines text-center>
+          <b>OR</b>
         </ion-label>
-      </ion-item>
-      <ion-item>
-        <ion-textarea placeholder="Description" [(ngModel)]="descriptiontext"></ion-textarea>
-      </ion-item>
-      <ion-item>
-        <ion-label> OUTPUT TYPE</ion-label>
-      </ion-item>
-      <ion-item>
-        <ion-row>
-          <!-- [ngClass]="{'isSelected': !whichtypeArray[i]['selected']}" -->
-          <ion-col *ngFor="let type of whichtypeArray;let i = index" (click)="whichTypeClicked(type)" class="lfdgsqboxcss" [ngClass]="{active: isActive(type)}">
-            <b> {{type}} </b>
-          </ion-col>
-        </ion-row>
-      </ion-item>
+        <div text-center class="footerbottomargin">
+          <button (click)="updateCancelSubmitCalled()" ion-button color="purplecolor" danger class="buttoncss">
+            <b>Submit</b>
+          </button>
+        </div>
 
-      <ion-item no-lines text-center>
-        <button text-center (click)="reSchedule()" ion-button color="purplecolor" padding>RESCHEDULE</button>
-      </ion-item>
+      </ion-list>
 
-      <ion-item no-lines text-center>
-        OR
-      </ion-item>
-      <!-- <ion-item>
-        <ion-input placeholder="RESCHEDULE" [(ngModel)]="scheduleText"></ion-input>
-      </ion-item> -->
-    </ion-list>
-
-    <div text-center class="footerbottomargin">
-      <button (click)="updateCancelSubmitCalled()" ion-button color="purplecolor" danger><b>Submit</b></button>
     </div>
-
-  </ion-card>
-
+  </div>
 </ion-content>
 
 <floating-button> </floating-button>

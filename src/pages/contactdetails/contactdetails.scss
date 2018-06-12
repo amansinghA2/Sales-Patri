@@ -1,0 +1,29 @@
+page-contactdetails {
+
+    ion-input{
+        border: 1px solid gray;
+        border-radius: 1vw;
+    }
+
+    ion-datetime{
+        border: 1px solid gray;
+        border-radius: 1vw;
+    }
+
+    .vertical-align-content 
+{
+     display: flex!important;
+     align-content: center!important;
+     align-items: center!important;
+}
+
+.infodatasizeheading{
+    font-size: 5vw;
+}
+
+.infocolsizeheading{
+    font-size: 3.5vw;
+}
+
+
+}

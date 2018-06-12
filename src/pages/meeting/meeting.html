@@ -1,25 +1,21 @@
 <ion-header>
   <ion-navbar hideBackButton color="purplecolor">
-    <ion-buttons start>
+    <ion-buttons left>
       <button ion-button menuToggle>
         <ion-icon name="menu"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-title class="titlepadding" style="padding-top:2.5vh">
+    <ion-title  text-center>
       SCHEDULE MEETING
     </ion-title>
-    <ion-buttons end>
+    <ion-buttons right>
       <header></header>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content scroll="true" class="appbackcolor">
-
-  <!-- <ion-refresher (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content></ion-refresher-content>
-  </ion-refresher> -->
-
+  
   <ion-card class="datediv" no-padding>
     <ion-row class="datedivpadding">
       <ion-col padding col-2>
@@ -45,52 +41,13 @@
     <ion-item no-lines>
       <ion-label class="labelfonts">Type</ion-label>
       <ion-select [(ngModel)]="whichtype" (ionChange)="onTypeChange(whichtype)" class="answerfonts">
-        <!-- *ngFor="let item of typesarray" -->
         <ion-option *ngFor="let key of keys;" [value]="key">
           <b> {{key}}</b>
         </ion-option>
       </ion-select>
     </ion-item>
     <hr>
-    <!-- <ion-item no-lines>
-      <ion-label class="labelfonts">Sub Type</ion-label>
-      <ion-select [(ngModel)]="selectedItem" class="answerfonts" (ionChange)="onChange(selectedItem)" *ngIf="typesarray[this.whichtype] == 'L'">
-        <ion-option *ngFor="let item of lfdgsqArray" [value]="item.name">
-          {{item.name}}
-        </ion-option>
-      </ion-select>
 
-      <ion-select [(ngModel)]="selectedItem" class="answerfonts" (ionChange)="onChange(selectedItem)" *ngIf="typesarray[this.whichtype] == 'F'">
-        <ion-option *ngFor="let item of lfdgsqArray" [value]="item.name">
-          {{item.name}}
-        </ion-option>
-      </ion-select>
-
-      <ion-select [(ngModel)]="selectedItem" class="answerfonts" (ionChange)="onChange(selectedItem)" *ngIf="typesarray[this.whichtype] == 'D'">
-        <ion-option *ngFor="let item of lfdgsqArray" [value]="selectedItem">
-          {{item.name}}
-        </ion-option>
-      </ion-select>
-
-      <ion-select [(ngModel)]="selectedItem" class="answerfonts" (ionChange)="onChange(selectedItem)" *ngIf="typesarray[this.whichtype] == 'G'">
-        <ion-option *ngFor="let item of lfdgsqArray" [value]="selectedItem">
-          {{item.name}}
-        </ion-option>
-      </ion-select>
-
-      <ion-select [(ngModel)]="selectedItem" class="answerfonts" (ionChange)="onChange(selectedItem)" *ngIf="typesarray[this.whichtype] == 'S'">
-        <ion-option *ngFor="let item of lfdgsqArray" [value]="item.source_name">
-          {{item.source_name}}
-        </ion-option>
-      </ion-select>
-
-      <ion-select [(ngModel)]="selectedItem" class="answerfonts" (ionChange)="onChange(selectedItem)" *ngIf="typesarray[this.whichtype] == 'Q'">
-        <ion-option *ngFor="let item of lfdgsqArray" [value]="selectedItem">
-          {{item.name}}
-        </ion-option>
-      </ion-select>
-    </ion-item>
-    <hr> -->
     <ion-row no-padding>
       <ion-col>
         <ion-searchbar no-padding [(ngModel)]="selectedItem" (ionInput)="updateSubtypeSearchResult($event)" placeholder="Sub Type"></ion-searchbar>
@@ -138,10 +95,7 @@
     </ion-row>
     <hr>
 
-    <!-- </ion-item> -->
-    <!-- </ion-item> -->
     <ion-item no-lines>
-      <!-- <ion-label >Meeting Description*</ion-label> -->
       <ion-input type="text" class="answerfonts" [(ngModel)]="meetingDescription" placeholder="Meeting Description *"></ion-input>
     </ion-item>
     <hr>

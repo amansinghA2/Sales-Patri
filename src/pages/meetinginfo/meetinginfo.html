@@ -6,15 +6,15 @@
 -->
 
 <ion-header>
-  <ion-navbar hideBackButton color="purplecolor">
-    <ion-buttons start>
+  <ion-navbar  color="purplecolor">
+    <ion-buttons left>
       <button ion-button menuToggle>
         <ion-icon name="menu"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-title class="titlepadding" style="padding-top:2.5vh" *ngIf="item.activity_type == 'Meeting'"> MEETING INFO</ion-title>
-    <ion-title class="titlepadding" style="padding-top:2.5vh" *ngIf="item.activity_type == 'Call'"> CALL INFO</ion-title>
-    <ion-buttons end>
+    <ion-title text-center  *ngIf="item.activity_type == 'Meeting'"> MEETING INFO</ion-title>
+    <ion-title text-center  *ngIf="item.activity_type == 'Call'"> CALL INFO</ion-title>
+    <ion-buttons right>
       <header></header>
     </ion-buttons>
   </ion-navbar>
@@ -95,8 +95,10 @@
       </ion-row>
     </ion-item>
 
+    <!-- [hidden]="item.activity_type === 'To-Do'" -->
+    
     <div text-center class="footerbottomargin">
-      <button (click)="updateMeeting()" ion-button color="purplecolor" class="buttoncss" danger *ngIf="item.activity_output_type == ''"><b>Update</b></button>
+      <button (click)="updateMeeting()"   ion-button color="purplecolor" class="buttoncss" danger *ngIf="item.activity_output_type == ''"><b>Update</b></button>
     </div>
 
   </ion-card>

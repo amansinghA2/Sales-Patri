@@ -35,7 +35,6 @@ export class HeaderComponent {
         this.isnotificationseen = val;
       })
 
-      console.log(JSON.stringify(this.notificationList));
 
       for(let i = 0 ; i < this.notificationList.length ; i++){
           // this.notificationList[i]['notification_isread'] == '1';

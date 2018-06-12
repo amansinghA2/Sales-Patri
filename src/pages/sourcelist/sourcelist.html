@@ -6,15 +6,15 @@
 -->
 <ion-header>
     <ion-navbar hideBackButton color="purplecolor">
-        <ion-buttons start>
+        <ion-buttons left>
             <button ion-button menuToggle>
                 <ion-icon name="menu"></ion-icon>
             </button>
         </ion-buttons>
-        <ion-title class="titlepadding" style="padding-top:2.5vh">
+        <ion-title text-center>
             SOURCE LIST
         </ion-title>
-        <ion-buttons end>
+        <ion-buttons right>
             <header></header>
         </ion-buttons>
     </ion-navbar>
@@ -22,13 +22,46 @@
 
 
 <ion-content no-pading class="appbackcolor">
-    <!-- <ion-card no-padding class="ioncardcss"> -->
 
-    <div padding>
+    <!-- <div padding>
         <ion-searchbar no-padding [(ngModel)]="selectedItem" (ionInput)="updateSubtypeSearchResult($event)" placeholder="Search Source Here"></ion-searchbar>
-    </div>
+    </div> -->
 
-    <div no-padding *ngIf="selectedsourceListArray.length != 0">
+    <ion-card class="ioncardcss" no-padding>
+        <ion-card no-padding>
+            <ion-segment [(ngModel)]="options" color="appbackgroundcolor">
+                <ion-segment-button value="filter">
+                    FILTER
+                </ion-segment-button>
+                <ion-segment-button value="search">
+                    SEARCH
+                </ion-segment-button>
+            </ion-segment>
+        </ion-card>
+        <div *ngIf="options != nil">
+            <hr>
+            <div [ngSwitch]="options" no-padding>
+                <div *ngSwitchCase="'filter'">
+                    <ion-item no-lines>
+                        <ion-label class="labelfonts">Type</ion-label>
+                        <ion-select [(ngModel)]="whichsubtype" (ionChange)="onTypeChange(whichsubtype)" class="answerfonts">
+                            <!-- *ngFor="let item of typesarray" -->
+                            <ion-option *ngFor="let key of subSrcArray;" [value]="key">
+                                <b> {{key}}</b>
+                            </ion-option>
+                        </ion-select>
+                    </ion-item>
+                </div>
+                <div *ngSwitchCase="'search'" style="padding-left:5vw;padding-right:5vw;">
+                    <ion-searchbar no-padding style="border-radius: 2vw" [(ngModel)]="selectedItem" (ionInput)="updateSubtypeSearchResult($event)"
+                        placeholder="Search Source Here"></ion-searchbar>
+                </div>
+            </div>
+            <hr>
+        </div>
+    </ion-card>
+
+    <div no-padding *ngIf="selectedsourceListArray.length != 0" class="footerbottomargin">
         <div no-padding *ngFor="let list of selectedsourceListArray" (click)="sourceClicked(list)" class="sourceleadlistdesign" no-padding>
             <ion-row no-padding>
                 <ion-col col-4 no-padding>
@@ -56,28 +89,10 @@
                     {{list.source_type}}
                 </ion-col>
             </ion-row>
-            <!-- <ion-col col-8>
-          <b>Name : </b> <br>
-          <span *ngIf="list.source_sub_type != ''"> <b>Category : </b> {{list.source_sub_type}}</span> <span *ngIf="list.source_sub_type == ''"> <b>Category : </b> - </span>  <br>
-          <b> Type : </b> {{list.source_type}}<br>
-        </ion-col>
-        <ion-col>
-            {{list.source_name}} 
-        </ion-col> -->
-            <!-- <ion-col col-1>
-            <div class="vl"></div>
-        </ion-col>
-        <ion-col col-3 class="sourcefont">
-         <b> Next Action :<br>
-          Call  </b> 
-        </ion-col> -->
-            <!-- <hr>
-        <br> -->
         </div>
         <hr>
     </div>
 
-    <!-- </ion-card> -->
 
 </ion-content>
 

@@ -1,17 +1,17 @@
 <ion-header>
   <ion-navbar hideBackButton color="purplecolor">
-    <ion-buttons start>
+    <ion-buttons left>
       <button ion-button menuToggle>
         <ion-icon name="menu"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-title >
+    <ion-title text-center>
       DASHBOARD
     </ion-title>
-    <ion-buttons end>
-      <button (click)="showNotifications()" id="notification-button" ion-button icon-only >
+    <ion-buttons right>
+      <button (click)="showNotifications()" id="notification-button" ion-button icon-only>
         <ion-icon name="notifications">
-            <ion-badge *ngIf="isnotificationseen === 'true'" id="notifications-badge" color="danger">{{notificationCount}}</ion-badge>
+          <ion-badge *ngIf="isnotificationseen === 'true'" id="notifications-badge" color="danger">{{notificationCount}}</ion-badge>
         </ion-icon>
       </button>
     </ion-buttons>
@@ -119,11 +119,11 @@
 
                   <ion-row no-padding>
                     <ion-col col-7 style="left:-30px" no-padding>
-                      <span class="listfontcolor"> {{item.activity_person_name}}</span>
+                      <span class="listfontcolor">
+                        <b>{{item.activity_person_name}} </b>
+                      </span>
                       <br>
-                      <span class="listfontcolor"> Source : -</span>
-                      <br>
-                      <span class="listfontcolor">{{item.activity_output_end_datetime}}
+                      <span class="listfontcolor">{{item.activity_output_end_datetime | date:'dd-MMM-yyyy hh:mm a'}}
                       </span>
                     </ion-col>
                     <ion-col col-5>
@@ -132,7 +132,8 @@
                     </ion-col>
                   </ion-row>
                 </div>
-                <ion-row  *ngIf="item.activity_output_end_datetime > currenTime && item.next_activity_id == '' && (item.activity_status == 'OPEN' || item.activity_status == 'POSTPONE') && countArray[0] > 1" style="margin-left:8vw;">
+                <ion-row *ngIf="item.activity_output_end_datetime > currenTime && item.next_activity_id == '' && (item.activity_status == 'OPEN' || item.activity_status == 'POSTPONE') && countArray[0] > 1"
+                  style="margin-left:8vw;">
                   <ion-col class="imgcol" text-center>
                     <span class="image"> </span>
                   </ion-col>
@@ -192,11 +193,11 @@
 
                   <ion-row no-padding>
                     <ion-col col-7 style="left:-30px" no-padding>
-                      <span class="listfontcolor"> {{item.activity_person_name}}</span>
+                      <span class="listfontcolor">
+                        <b>{{item.activity_person_name}} </b>
+                      </span>
                       <br>
-                      <span class="listfontcolor"> Source : -</span>
-                      <br>
-                      <span class="listfontcolor">{{item.activity_output_end_datetime}}
+                      <span class="listfontcolor">{{item.activity_output_end_datetime | date:'dd-MMM-yyyy hh:mm a'}}
                       </span>
                     </ion-col>
                     <ion-col col-5>
@@ -207,9 +208,11 @@
                   <!-- <img  src="assets/imgs/thread.png"  width="10" height="10" alt="" class=""> -->
                   <!-- <img  src="assets/imgs/thread.png" class= "dashlistthreadiconimgleft" width="1" height="10" alt="" class=""> -->
                 </div>
-                <ion-row  *ngIf="item.activity_output_end_datetime <= currenTime && item.next_activity_id == '' && (item.activity_status == 'OPEN' || item.activity_status == 'POSTPONE') && countArray[1] > 1" style="margin-left:8vw;">
+                <ion-row *ngIf="item.activity_output_end_datetime <= currenTime && item.next_activity_id == '' && (item.activity_status == 'OPEN' || item.activity_status == 'POSTPONE') && countArray[1] > 1"
+                  style="margin-left:8vw;">
                   <ion-col class="imgcol" text-center>
                     <span class="image"> </span>
+                    <!-- <img style="width:10%; text-align: center;align-content: center;align-items: center" src="assets/imgs/thread.png" alt=""> -->
                   </ion-col>
                   <ion-col class="imgcol" text-center>
                     <span class="image" text-center> </span>
@@ -265,11 +268,11 @@
 
                   <ion-row no-padding>
                     <ion-col col-7 style="left:-30px" no-padding>
-                      <span class="listfontcolor"> {{item.activity_person_name}}</span>
+                      <span class="listfontcolor">
+                        <b>{{item.activity_person_name}} </b>
+                      </span>
                       <br>
-                      <span class="listfontcolor"> Source : -</span>
-                      <br>
-                      <span class="listfontcolor">{{item.activity_output_end_datetime}}
+                      <span class="listfontcolor">{{item.activity_output_end_datetime | date:'dd-MMM-yyyy hh:mm a'}}
                       </span>
                     </ion-col>
                     <ion-col col-5>
@@ -280,7 +283,7 @@
                   <ion-row>
                   </ion-row>
                 </div>
-                <ion-row  *ngIf="item.activity_output_type != '' && countArray[2] > 1" style="margin-left:8vw;">
+                <ion-row *ngIf="item.activity_output_type != '' && countArray[2] > 1" style="margin-left:8vw;">
                   <ion-col class="imgcol" text-center>
                     <span class="image"> </span>
                   </ion-col>
@@ -338,11 +341,11 @@
 
               <ion-row no-padding>
                 <ion-col col-7 style="left:-30px" no-padding>
-                  <span class="listfontcolor"> {{item.activity_person_name}}</span>
+                  <span class="listfontcolor">
+                    <b>{{item.activity_person_name}} </b>
+                  </span>
                   <br>
-                  <span class="listfontcolor"> Source : -</span>
-                  <br>
-                  <span class="listfontcolor">{{item.activity_output_end_datetime}}
+                  <span class="listfontcolor">{{item.activity_output_end_datetime | date:'dd-MMM-yyyy hh:mm a'}}
                   </span>
                 </ion-col>
                 <ion-col col-5>
@@ -351,7 +354,7 @@
                 </ion-col>
               </ion-row>
             </div>
-            <ion-row  *ngIf="item.activity_output_end_datetime <= currenTime && item.next_activity_id == '' && (item.activity_status == 'OPEN' || item.activity_status == 'POSTPONE')">
+            <ion-row *ngIf="item.activity_output_end_datetime <= currenTime && item.next_activity_id == '' && (item.activity_status == 'OPEN' || item.activity_status == 'POSTPONE')">
               <ion-col class="imgcol" text-center>
                 <span class="image"> </span>
               </ion-col>

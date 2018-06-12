@@ -1,9 +1,34 @@
 page-sourceinfo {
 
-
+.infodatasizeheading{
+    size:5vw;
+}
     .infodatasize{
-        font-size: 5vw;
+        font-size: 4vw;
+        padding-left:3vw;
+        padding-top:1vw;
+        padding-bottom:0.5vw;
+        // font-weight: bold;
     }
-    
+
+    .momheading{
+        width: 100%;
+        padding:2%;
+        margin-bottom: 2%;
+        background: darkgray;
+        border-radius: 1vw;
+    }
+
+    .momheadingbottom{
+        width: 100%;
+        padding:2%;
+        margin-bottom: 10%;
+        background: darkgray;
+        border-radius: 1vw;
+    }
+
+    .mominnerdiv{
+        background:	#F3F4F0;margin-bottom:2%;width:100%;border-radius: 2vw;
+    }
 
 }

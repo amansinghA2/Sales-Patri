@@ -25,7 +25,6 @@ export class MeetinginfoPage {
   
   constructor(public navCtrl: NavController, public navParams: NavParams, public globals: Globals) {
 
-   
     this.item = this.navParams.get('item');
 
     setTimeout(() => {
@@ -44,14 +43,8 @@ export class MeetinginfoPage {
     if(this.meetinginfolist.length > 0){
       this.meetinginfolist = this.globals.selectTables(sql);
 
-      setTimeout(() => {
-        console.log("nextactivity" + JSON.stringify(this.meetinginfolist));
-      }, 3000);
 
     }
-
-
-
 
     console.log('ionViewDidLoad MeetinginfoPage');
   }

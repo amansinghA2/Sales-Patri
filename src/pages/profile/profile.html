@@ -6,15 +6,15 @@
 -->
 <ion-header>
     <ion-navbar hideBackButton color="purplecolor">
-        <ion-buttons start>
+        <ion-buttons left>
             <button ion-button menuToggle >
                 <ion-icon name="menu"></ion-icon>
               </button>
           </ion-buttons>
-          <ion-title class="titlepadding" style="padding-top:2.5vh">
+          <ion-title  text-center>
               MY PROFILE
           </ion-title>
-          <ion-buttons end>
+          <ion-buttons right>
               <header></header>
           </ion-buttons>
     </ion-navbar>
@@ -31,7 +31,7 @@
       <img id="camera-image"  (click)="imageCaptureClicked()">
   </ion-card>
 </div>
-<div style="height:75%">
+<div style="height:75%" class="footerbottomargin">
  <ion-row *ngFor="let data of profileData">
    <ion-col col-5>
       {{data.name}}
@@ -41,52 +41,12 @@
   </ion-col>
  </ion-row> 
 
- <!-- <ion-row>
-  <ion-col col-5>
-     OFFICIAL NUMBER :
-  </ion-col>
-  <ion-col col-7>
-    
- </ion-col>
-</ion-row> 
-
-<ion-row>
-  <ion-col col-5>
-     PERSONAL NUMBER :
-  </ion-col>
-  <ion-col col-7>
-    
- </ion-col>
-</ion-row> 
-
-<ion-row>
-  <ion-col col-5>
-     OFFICIAL EMAIL :
-  </ion-col>
-  <ion-col col-7>
-    
- </ion-col>
-</ion-row> 
-
-<ion-row>
-  <ion-col col-5>
-     PERSONAL EMAIL :
-  </ion-col>
-  <ion-col col-7>
-    
- </ion-col>
-</ion-row> 
-
-<ion-row>
-  <ion-col col-5>
-     CONTACT ADDRESS :
-  </ion-col>
-  <ion-col col-7>
-    
- </ion-col>
-</ion-row> -->
-
 </div> 
 </ion-card>
 
 </ion-content>
+
+
+
+<floating-button> </floating-button>
+<footerbar> </footerbar>

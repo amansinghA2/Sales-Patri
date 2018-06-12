@@ -10,6 +10,8 @@ import { IonicPage, NavController, NavParams, ToastController, LoadingController
 import moment from 'moment';
 import { Observable } from 'rxjs/Rx';
 import { User } from '../../providers/user/user';
+import { forkJoin } from "rxjs/observable/forkJoin";
+import { Api } from '../../providers/api/api';
 
 /**
  * Generated class for the TodoitemPage page.
@@ -48,11 +50,12 @@ export class TodoitemPage {
   items;
   keys;
   taskStatus = '';
-  notificationList:any;
+  notificationList: any;
   lfdgsqarray = [];
   typeString = '';
-  
-  constructor(public navCtrl: NavController, public navParams: NavParams, public localNotifications: LocalNotifications, public globals: Globals, public http: Http, public toastCtrl?: ToastController,public storage?:Storage , public loadingCtrl?:LoadingController , public user?:User) {
+  notificationArray = [];
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, public localNotifications: LocalNotifications, public globals: Globals, public http: Http, public toastCtrl?: ToastController, public storage?: Storage, public loadingCtrl?: LoadingController, public user?: User, public api?: Api) {
 
     var sql = 'SELECT * from ' + this.globals.m_Notifications;
     this.notificationList = this.globals.selectTables(sql);
@@ -60,10 +63,11 @@ export class TodoitemPage {
     this.myDate = moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ');
     this.myTime = moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ');
 
-    this.selectedDate = this.globals.getDate(this.myDate, 'dd/MM/yyyy')
+    this.selectedDate = moment.utc().local().format('YYYY-MM-DD');
     this.selectedTime = moment.utc().local().format('hh:mm a');
 
-    this.dateTime = this.globals.getDate(this.myDate, 'dd/MM/yyyy') + "    " + this.globals.getDate(this.myTime, 'HH:mm'); this.pushDateString = moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ');
+    // this.dateTime = moment.utc(this.myDate).local().format('YYYY-MM-DD') + " " + moment.utc(this.myTime).local().format('HH:mm');
+    this.dateTime = moment.utc(this.myDate).local().format('YYYY-MM-DDT') + moment.utc(this.myTime).local().format('HH:mm:ssZ');
 
     this.whichtype = 'Lead Activity';
 
@@ -102,21 +106,21 @@ export class TodoitemPage {
 
     this.getcallmettingtypeJSON(http).subscribe(data => {
 
-        this.typesarray = data['MeetingType'];
-        this.keys = Object.keys(this.typesarray);
+      this.typesarray = data['MeetingType'];
+      this.keys = Object.keys(this.typesarray);
 
-    }, error => console.log( JSON.stringify("aa" + error)));
+    }, error => console.log(JSON.stringify("aa" + error)));
 
-}
+  }
 
-getcallmettingtypeJSON(http): Observable<any> {
-  return http.get("assets/callmeetingleadtype.json")
+  getcallmettingtypeJSON(http): Observable<any> {
+    return http.get("assets/callmeetingleadtype.json")
       .map((res: any) => res.json());
-}
+  }
 
-showNotifications() {
-  this.navCtrl.push(NotificationsPage);
-}
+  showNotifications() {
+    this.navCtrl.push(NotificationsPage);
+  }
 
 
   ionViewDidLoad() {
@@ -125,24 +129,28 @@ showNotifications() {
 
 
   fromDateData() {
-    this.selectedDate = this.globals.getDate(this.myDate, 'dd/MM/yyyy')
-    this.dateTime = this.globals.getDate(this.myDate, 'dd/MM/yyyy') + "    " + this.globals.getDate(this.myTime, 'HH:mm');
+    this.selectedDate = moment.utc(this.myDate).local().format('YYYY-MM-DD');
+    // this.dateTime = moment.utc(this.myDate).local().format('YYYY-MM-DD') + " " + moment.utc(this.myTime).local().format('HH:mm');
+    this.dateTime = moment.utc(this.myDate).local().format('YYYY-MM-DDT') + moment.utc(this.myTime).local().format('HH:mm:ssZ');
+
     this.pushDateString = moment.utc(this.myDate).local().format('YYYY-MM-DDT') + moment.utc(this.myTime).local().format('HH:mm:ssZ');
   }
 
   fromTimeData() {
     this.selectedTime = moment.utc(this.myTime).local().format('hh:mm a');
-    this.dateTime = this.globals.getDate(this.myDate, 'dd/MM/yyyy') + "    " + this.globals.getDate(this.myTime, 'HH:mm');
+    // this.dateTime = moment.utc(this.myDate).local().format('YYYY-MM-DD') + " " + moment.utc(this.myTime).local().format('HH:mm');
+    this.dateTime = moment.utc(this.myDate).local().format('YYYY-MM-DDT') + moment.utc(this.myTime).local().format('HH:mm:ssZ');
+
     this.pushDateString = moment.utc(this.myDate).local().format('YYYY-MM-DDT') + moment.utc(this.myTime).local().format('HH:mm:ssZ');
   }
 
-  toDoTypeClicked(item){
+  toDoTypeClicked(item) {
     this.typeString = item;
   }
 
   submitEvent() {
 
-    if(this.globals.isNetworkConnected){
+    if (this.globals.isNetworkConnected) {
       this.globals.codeLatLng();
     }
 
@@ -165,31 +173,41 @@ showNotifications() {
             trigger: { at: new Date(moment.utc(this.pushDateString).local().valueOf() - 10 * 1000) },
             led: 'FF0000',
             sound: null,
-            icon:'file://assets/imgs/icon.png',
+            icon: 'file://assets/imgs/icon.png',
             smallIcon: 'file://assets/imgs/icon.png',
           });
 
-          this.globals.setStorage('isseennotification' , 'true');
+          this.globals.setStorage('isseennotification', 'true');
 
-          var notifyArray = { "notification_id": '', "notification_from": '', "notification_to": '', "notification_redirect_url": '', "notification_title": 'Meeting Scheduled', "notification_descripiton": 'Metting with ' + this.meetingPerson + ' scheduled on ' + this.selectedDate + ' at ' + this.selectedTime, "notification_is_unread": '', "notification_created_on": '', "notification_updated_on": '' , 'notification_isread':'0'  , 'notification_activitytype': 'To-Do' , "notification_scheduled_type": this.typesarray[this.whichtype]};
+          var notifyArray = { "notification_id": '', "notification_from": val, "notification_to": '', "notification_redirect_url": '', "notification_title": 'Meeting Scheduled', "notification_descripiton": 'Your To-Do activity has been scheduled on ' + this.selectedDate + ' at ' + this.selectedTime, "notification_is_unread": '', "notification_created_on": moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ'), "notification_updated_on": moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ'), 'notification_isread': '0', 'notification_activitytype': 'To-Do', "notification_scheduled_type": this.typesarray[this.whichtype] };
           this.globals.updateTables('notification', this.globals.m_Notifications, notifyArray);
 
           if (this.items) {
 
             dataArray = { "dash_optionid": 3, "activity_date_time": this.selectedDate, "activity_type": 'To-Do', "activity_person_name": '', "activity_scheduled_type": this.typesarray[this.whichtype], "activity_ref_id": '', "activity_location": '', "activity_description": this.todoDescription, "activity_status": 'ATTENDED', "activity_output_type": '', "activity_output_remarks": '', "activity_output_end_datetime": this.dateTime, "next_activity_id": '', "activity_created_on": this.dateTime, "activity_updated_on": moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ'), "activity_created_by": val, "activity_updated_by": val, "activity_latitude": '', "activity_longitude": '', "current_lat": this.globals.curr_lat, "current_lng": this.globals.curr_lng, "current_loc": "", "contact_id": '', "team_leader": '' }
-              this.globals.updateTables('call', this.globals.m_Activities, dataArray);
+            this.globals.updateTables('call', this.globals.m_Activities, dataArray);
 
             setTimeout(() => {
               var sql = 'SELECT * from ' + this.globals.m_Activities;
               this.recordsList = this.globals.selectTables(sql);
+
+              var sql1 = 'SELECT * from ' + this.globals.m_Notifications;
+              this.notificationArray = this.globals.selectTables(sql1);
+
               if (this.globals.isNetworkConnected) {
                 setTimeout(() => {
                   this.storage.get('token').then((val) => {
-                    this.user.postMethod('sync', JSON.stringify(this.recordsList), { 'Authorization': val }).subscribe((resp) => {
-                      console.log("Respis" + JSON.stringify(resp));
+
+                    let seq = this.api.post('sync', JSON.stringify(this.recordsList), { 'Authorizations': val }).share();
+                    let seq1 = this.api.post('notification_sync', JSON.stringify(this.notificationArray), { 'Authorizations': val }).share();
+
+                    forkJoin([seq, seq1]).subscribe(results => {
+
+
                     })
+
                   })
-                }, 100);
+                }, 200);
               } else {
                 let toast = this.toastCtrl.create({
                   message: 'Check Your Internet connection',
@@ -201,9 +219,9 @@ showNotifications() {
               }
               loading.dismiss();
               this.navCtrl.push(MeetingupdatePage, { val: 'meeting' });
-            }, 100);
+            }, 200);
 
-          }else{
+          } else {
 
             if (this.updateItems) {
               dataArray = { "dash_optionid": 3, "activity_date_time": this.selectedDate, "activity_type": 'To-Do', "activity_person_name": '', "activity_scheduled_type": this.typesarray[this.whichtype], "activity_ref_id": '', "activity_location": '', "activity_description": this.todoDescription, "activity_status": 'POSTPONE', "activity_output_type": '', "activity_output_remarks": '', "activity_output_end_datetime": this.dateTime, "next_activity_id": '', "activity_created_on": moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ'), "activity_updated_on": this.dateTime, "activity_created_by": val, "activity_updated_by": val, "activity_latitude": '', "activity_longitude": '', "current_lat": this.globals.curr_lat, "current_lng": this.globals.curr_lng, "current_loc": "", "contact_id": '', "team_leader": '' }
@@ -229,14 +247,24 @@ showNotifications() {
             setTimeout(() => {
               var sql = 'SELECT * from ' + this.globals.m_Activities;
               this.recordsList = this.globals.selectTables(sql);
+
+              var sql1 = 'SELECT * from ' + this.globals.m_Notifications;
+              this.notificationArray = this.globals.selectTables(sql1);
+
               if (this.globals.isNetworkConnected) {
                 setTimeout(() => {
                   this.storage.get('token').then((val) => {
-                    this.user.postMethod('sync', JSON.stringify(this.recordsList), { 'Authorization': val }).subscribe((resp) => {
-                      console.log("Respis" + JSON.stringify(resp));
+
+                    let seq = this.api.post('sync', JSON.stringify(this.recordsList), { 'Authorizations': val }).share();
+                    let seq1 = this.api.post('notification_sync', JSON.stringify(this.notificationArray), { 'Authorizations': val }).share();
+
+                    forkJoin([seq, seq1]).subscribe(results => {
+
+
                     })
+
                   })
-                }, 100);
+                }, 200);
               } else {
                 let toast = this.toastCtrl.create({
                   message: 'Check Your Internet connection',
@@ -248,9 +276,9 @@ showNotifications() {
               }
               loading.dismiss();
               this.navCtrl.push(DashboardPage);
-            }, 100);
+            }, 200);
           }
-      })
+        })
 
       } else {
         let toast = this.toastCtrl.create({

@@ -1,3 +1,7 @@
+import { ProjectinfoPage } from './../pages/projectinfo/projectinfo';
+import { ProjectlistPage } from './../pages/projectlist/projectlist';
+import { ContactlistPage } from './../pages/contactlist/contactlist';
+import { AddprojectPage } from './../pages/addproject/addproject';
 import { LocationTrackerProvider } from './../providers/location-tracker/location-tracker';
 import { GoalsinfoPage } from './../pages/goalsinfo/goalsinfo';
 import { LeadinfoPage } from './../pages/leadinfo/leadinfo';
@@ -10,7 +14,7 @@ import { SourcelistPage } from './../pages/sourcelist/sourcelist';
 import { LeadlistPage } from './../pages/leadlist/leadlist';
 import { GoalsPage } from './../pages/goals/goals';
 import { ProfilePage } from './../pages/profile/profile';
-import { Http, HttpModule } from '@angular/http';
+import { HttpModule } from '@angular/http';
 import { Api } from './../providers/api/api';
 import { User } from './../providers/user/user';
 import { FloatingButtonComponent } from './../components/floating-button/floating-button';
@@ -27,26 +31,35 @@ import { MeetingPage } from '../pages/meeting/meeting';
 import { Globals } from './globals';
 import { DashboardPage } from '../pages/dashboard/dashboard';
 import { MapPage } from '../pages/map/map';
-import { Ng4GeoautocompleteModule } from 'ng4-geoautocomplete';
 import { Geolocation } from '@ionic-native/geolocation';
 import { SchedulecallPage } from '../pages/schedulecall/schedulecall';
 import { MeetinginfoPage } from '../pages/meetinginfo/meetinginfo';
 import { MeetingupdatePage } from '../pages/meetingupdate/meetingupdate';
 import { FooterbarComponent } from '../components/footerbar/footerbar';
-import { IonicStorageModule, Storage } from '@ionic/storage';
+import { IonicStorageModule } from '@ionic/storage';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import { Network } from '@ionic-native/network';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Camera, CameraOptions } from '@ionic-native/camera';
+import { HttpClientModule } from '@angular/common/http';
+import { Camera } from '@ionic-native/camera';
 import { SettingsPage } from '../pages/settings/settings';
-import { AutoCompleteModule } from 'ionic2-auto-complete';
 import { NotificationsPage } from '../pages/notifications/notifications';
 import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
 import { StatusBar } from '@ionic-native/status-bar';
 import { OpenNativeSettings } from '@ionic-native/open-native-settings';
+import { AppVersion } from '@ionic-native/app-version';
+import { ContactdetailsPage } from '../pages/contactdetails/contactdetails';
+import { CallNumber } from '@ionic-native/call-number';
+import { EmailComposer } from '@ionic-native/email-composer';
+import { NativeGeocoder } from '@ionic-native/native-geocoder';
+import { Firebase } from '@ionic-native/firebase';
 
 @NgModule({
   declarations: [
+    ProjectinfoPage,
+    ProjectlistPage,
+    ContactlistPage,
+    ContactdetailsPage,
+    AddprojectPage,
     GoalsinfoPage,
     LeadinfoPage,
     SourceinfoPage,
@@ -74,16 +87,19 @@ import { OpenNativeSettings } from '@ionic-native/open-native-settings';
     DiaryPage
   ],
   imports: [
-    AutoCompleteModule,
     HttpModule,
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    Ng4GeoautocompleteModule.forRoot(),
     IonicStorageModule.forRoot(),
     HttpClientModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
+    ProjectinfoPage,
+    ProjectlistPage,
+    ContactlistPage,
+    ContactdetailsPage,
+    AddprojectPage,
     GoalsinfoPage,
     LeadinfoPage,
     SourceinfoPage,
@@ -108,6 +124,11 @@ import { OpenNativeSettings } from '@ionic-native/open-native-settings';
     DiaryPage
   ],
   providers: [
+    Firebase,
+    NativeGeocoder,
+    EmailComposer,
+    CallNumber,
+    AppVersion,
     OpenNativeSettings,
     StatusBar,
     LocationTrackerProvider,

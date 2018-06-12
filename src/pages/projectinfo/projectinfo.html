@@ -1,0 +1,108 @@
+<!--
+  Generated template for the ProjectinfoPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar  color="purplecolor">
+    <ion-buttons left>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title text-center>
+      PROJECT INFO
+    </ion-title>
+    <ion-buttons right>
+      <header></header>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content no-pading class="appbackcolor">
+
+  <ion-card class="ioncardcss" padding>
+
+    <b class="infodatasizeheading"> Details :</b>
+    <hr>
+    <ion-row class="infocolsizeheading">
+      <!-- db.executeSql('INSERT OR REPLACE INTO ' + this.m_Add_Project + ' ( builder_group, project_name , developer_name ,source_name , source_id ,project_location, project_lat , project_lng , total_unit ,avg_val_unit ,project_status) VALUES (?,?,?,?,?,?,?,?,?,?,?)', [dataArray['builder_group'], dataArray['project_name'], dataArray['developer_name'], dataArray['source_name'] , dataArray['source_id'], dataArray['project_location'], dataArray['project_lat'], dataArray['project_lng'], dataArray['total_unit'] , dataArray['avg_val_unit'] , dataArray['project_status']]) -->
+
+      <ion-col >
+        <b> PROJECT NAME : </b>
+      </ion-col>
+      <ion-col >
+        {{item.project_name}}
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="infocolsizeheading">
+      <ion-col >
+        <b> BUILDER GROUP : </b>
+      </ion-col>
+      <ion-col >
+        {{item.builder_group}}
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="infocolsizeheading">
+      <ion-col >
+        <b> DEVELOPER NAME : </b>
+      </ion-col>
+      <ion-col >
+        {{item.developer_name}}
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="infocolsizeheading">
+      <ion-col >
+        <b> SOURCE NAME : </b>
+      </ion-col>
+      <ion-col >
+        {{item.source_name}}
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="infocolsizeheading">
+      <ion-col >
+        <b> LOCATION : </b>
+      </ion-col>
+      <ion-col>
+        {{item.project_location}}
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="infocolsizeheading">
+      <ion-col >
+        <b> TOTAL UNIT : </b>
+      </ion-col>
+      <ion-col >
+        {{item.total_unit}}
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="infocolsizeheading">
+      <ion-col >
+        <b> AVG. VAL OF UNIT : </b>
+      </ion-col>
+      <ion-col >
+        {{item.avg_val_unit}}
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="infocolsizeheading">
+      <ion-col >
+        <b> PROJECT STATUS : </b>
+      </ion-col>
+      <ion-col >
+        {{item.project_status}}
+      </ion-col>
+    </ion-row>
+
+  </ion-card>
+
+</ion-content>
+
+<floating-button> </floating-button>
+<footerbar> </footerbar>

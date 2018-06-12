@@ -1,6 +1,5 @@
 // http://ionicframework.com/docs/theming/
 
-@import "../../node_modules/ionic2-auto-complete/auto-complete";
 
 // App Global Sass
 // --------------------------------------------------
@@ -121,6 +120,17 @@
 
 .titlepadding{
     padding-top:2vh;
+}
+
+.vertical-align-content 
+{
+     display: flex!important;
+     align-content: center!important;
+     align-items: center!important;
+}
+
+.momheading{
+    padding:5vw;
 }
 
 

@@ -1,26 +1,30 @@
+import { Api } from './../providers/api/api';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Network } from '@ionic-native/network';
 import { Http } from '@angular/http';
 import { Injectable, OnInit, NgZone, ApplicationRef } from "@angular/core";
 import { SQLite, SQLiteObject } from "@ionic-native/sqlite";
-import { Component ,Pipe, PipeTransform, ChangeDetectorRef } from '@angular/core';
+import { Component, Pipe, PipeTransform, ChangeDetectorRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Platform, NavController, ToastController, AlertController } from "ionic-angular";
 import { Observable } from 'rxjs/Rx';
 import { Storage } from '@ionic/storage';
 import { OpenNativeSettings } from '@ionic-native/open-native-settings';
+import { ActionSheetController } from 'ionic-angular'
+import { forkJoin } from "rxjs/observable/forkJoin";
+
 
 declare var google;
 
 @Component({
     templateUrl: 'globals.html'
-  })
+})
 
 @Injectable()
 export class Globals {
-subscription:any;
+    subscription: any;
 
-    constructor(public sqlite: SQLite, public platform: Platform, public http: Http, public network: Network, public storage: Storage, public geolocation: Geolocation, public ngZone: NgZone, public cdRef: ApplicationRef , public toastCtrl:ToastController , public openNativeSetting:OpenNativeSettings , public alertCtrl:AlertController) {
+    constructor(public sqlite: SQLite, public platform: Platform, public http: Http, public network: Network, public storage: Storage, public geolocation: Geolocation, public ngZone: NgZone, public cdRef: ApplicationRef, public toastCtrl: ToastController, public openNativeSetting: OpenNativeSettings, public alertCtrl: AlertController, public actionSheetCtrl: ActionSheetController, public api: Api) {
         this.ngZone = ngZone;
         this.platform.ready().then(() => {
 
@@ -28,8 +32,8 @@ subscription:any;
 
         });
 
-        
-    
+
+
     }
 
     profileModal: any;
@@ -54,6 +58,7 @@ subscription:any;
     m_ContactDetails = "m_ContactDetails";
     m_Source_Master = "m_Source_Master";
     m_Lead_Master = "m_Lead_Master";
+    m_Add_Project = "m_Add_Project";
     m_Goals_Master = "m_Goals_Master";
     m_Para_Master = "m_Para_Master";
     m_Images = "m_Images";
@@ -91,13 +96,16 @@ subscription:any;
                 + ' (id integer primary key AUTOINCREMENT, activity_id integer, person_type TEXT, person_id integer)', {})
 
             db.executeSql('CREATE TABLE IF NOT EXISTS ' + this.m_ContactDetails
-                + ' (id integer primary key AUTOINCREMENT, ref_id integer, contact_name TEXT, contact_number_1 TEXT , contact_number_2 TEXT , contact_email_1 TEXT , contact_email_2 TEXT , contact_dob TEXT ,contact_created_on TEXT , contact_updated_on TEXT , contact_created_by integer , contact_updated_by integer , def_addr TEXT, def_lat TEXT , def_lng TEXT)', {})
+                + ' (id integer primary key AUTOINCREMENT, ref_id integer , contact_name TEXT, contact_number_1 TEXT , contact_number_2 TEXT , contact_email_1 TEXT , contact_email_2 TEXT , contact_dob TEXT ,contact_created_on TEXT , contact_updated_on TEXT , contact_created_by TEXT , contact_updated_by TEXT , def_addr TEXT, def_lat TEXT , def_lng TEXT)', {})
 
             db.executeSql('CREATE TABLE IF NOT EXISTS ' + this.m_Source_Master
                 + ' (id integer primary key AUTOINCREMENT, source_id integer, source_type TEXT, source_sub_type TEXT , source_name integer , source_address_1 TEXT , source_address_2 TEXT , source_address_3 TEXT ,source_location TEXT , source_city TEXT , source_pincode integer , source_active integer , source_latitude float , source_longitude float , source_tel_number_1 TEXT , source_tel_number_2 TEXT, source_tel_number_3 TEXT, source_created_on TEXT, source_updated_on TEXT, source_created_by integer , source_updated_by integer)', {})
 
             db.executeSql('CREATE TABLE IF NOT EXISTS ' + this.m_Lead_Master
-                + ' (id integer primary key AUTOINCREMENT, lead_no integer, lead_company TEXT , name TEXT , branch TEXT , source_type TEXT , sub_source TEXT , last_action_date TEXT)', {})
+                + ' (id integer primary key AUTOINCREMENT, lead_no integer, lead_company TEXT , name TEXT , branch TEXT , source_type TEXT , sub_source TEXT , last_action_date TEXT , lead_status_code TEXT, lead_status TEXT)', {})
+
+            db.executeSql('CREATE TABLE IF NOT EXISTS ' + this.m_Add_Project
+                + ' (id integer primary key AUTOINCREMENT,emp_id integer, builder_group TEXT , project_name TEXT , developer_name TEXT ,source_name TEXT , source_id integer , project_location TEXT , project_lat TEXT  , project_lng TEXT , total_unit TEXT , avg_val_unit TEXT, project_status TEXT)', {})
 
             db.executeSql('CREATE TABLE IF NOT EXISTS ' + this.m_Goals_Master
                 + ' (id integer primary key AUTOINCREMENT, goal_id integer, user_id integer , so_id integer , goal_title TEXT , goal_description TEXT , tasks TEXT , escalated_to_manager TEXT , goal_deadline TEXT , achieved_status TEXT , remarks TEXT , created_on TEXT , updated_on TEXT)', {})
@@ -142,7 +150,7 @@ subscription:any;
 
     }
 
-   
+
 
     codeLatLng() {
 
@@ -198,7 +206,7 @@ subscription:any;
 
                 case this.m_Activities:
 
-                    db.executeSql('INSERT INTO ' + this.m_Activities + ' (dash_optionid , activity_date_time,activity_person_name, activity_type ,activity_scheduled_type, activity_ref_id ,activity_location, activity_description ,activity_status, activity_output_type ,activity_output_remarks, activity_output_end_datetime ,next_activity_id, activity_created_on ,activity_updated_on, activity_created_by , activity_updated_by , activity_latitude , activity_longitude,current_lat , current_lng , current_loc ,contact_id ,team_leader) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [dataArray['dash_optionid'], dataArray['activity_date_time'], dataArray['activity_person_name'], dataArray['activity_type'], dataArray['activity_scheduled_type'], dataArray['activity_ref_id'], dataArray['activity_location'], dataArray['activity_description'], dataArray['activity_status'], dataArray['activity_output_type'], dataArray['activity_output_remarks'], dataArray['activity_output_end_datetime'], dataArray['next_activity_id'], dataArray['activity_created_on'], dataArray['activity_updated_on'], dataArray['activity_created_by'], dataArray['activity_updated_by'], dataArray['activity_latitude'], dataArray['activity_longitude'], dataArray['current_lat'], dataArray['current_lng'], dataArray['current_loc'], dataArray['contact_id'] ,dataArray['team_leader']])
+                    db.executeSql('INSERT INTO ' + this.m_Activities + ' (dash_optionid , activity_date_time,activity_person_name, activity_type ,activity_scheduled_type, activity_ref_id ,activity_location, activity_description ,activity_status, activity_output_type ,activity_output_remarks, activity_output_end_datetime ,next_activity_id, activity_created_on ,activity_updated_on, activity_created_by , activity_updated_by , activity_latitude , activity_longitude,current_lat , current_lng , current_loc ,contact_id ,team_leader) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [dataArray['dash_optionid'], dataArray['activity_date_time'], dataArray['activity_person_name'], dataArray['activity_type'], dataArray['activity_scheduled_type'], dataArray['activity_ref_id'], dataArray['activity_location'], dataArray['activity_description'], dataArray['activity_status'], dataArray['activity_output_type'], dataArray['activity_output_remarks'], dataArray['activity_output_end_datetime'], dataArray['next_activity_id'], dataArray['activity_created_on'], dataArray['activity_updated_on'], dataArray['activity_created_by'], dataArray['activity_updated_by'], dataArray['activity_latitude'], dataArray['activity_longitude'], dataArray['current_lat'], dataArray['current_lng'], dataArray['current_loc'], dataArray['contact_id'], dataArray['team_leader']])
                         .then(res => {
                             if (updateItems) {
 
@@ -221,7 +229,7 @@ subscription:any;
                     break;
                 case this.m_ContactDetails:
                     //  var dataArray = {"ref_id": 1 ,"contact_name":this.dateTime , "contact_number_1":this.whichtype, "contact_number_2":this.meetingPerson ,"contact_email_1":'AB',"contact_email_2":'1',"contact_dob":this.locationDescription,"contact_created_on":this.dateTime,"contact_updated_on":'1',"contact_created_by":'',"contact_updated_by":'' }
-                    db.executeSql('INSERT OR REPLACE INTO ' + this.m_ContactDetails + ' (ref_id, contact_name ,contact_number_1, contact_number_2 ,contact_email_1, contact_email_2 ,contact_dob, contact_created_on ,contact_updated_on, contact_created_by ,contact_updated_by , def_addr , def_lat  , def_lng ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [dataArray['ref_id'], dataArray['contact_name'], dataArray['contact_number_1'], dataArray['contact_number_2'], dataArray['contact_email_1'], dataArray['contact_email_2'], dataArray['contact_dob'], dataArray['contact_created_on'], dataArray['contact_updated_on'], dataArray['contact_created_by'], dataArray['contact_updated_by'] , dataArray['def_addr'] , dataArray['def_lat'] , dataArray['def_lng']])
+                    db.executeSql('INSERT OR REPLACE INTO ' + this.m_ContactDetails + ' (ref_id , contact_name ,contact_number_1, contact_number_2 ,contact_email_1, contact_email_2 ,contact_dob, contact_created_on ,contact_updated_on, contact_created_by ,contact_updated_by , def_addr , def_lat  , def_lng ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [dataArray['ref_id'], dataArray['contact_name'], dataArray['contact_number_1'], dataArray['contact_number_2'], dataArray['contact_email_1'], dataArray['contact_email_2'], dataArray['contact_dob'], dataArray['contact_created_on'], dataArray['contact_updated_on'], dataArray['contact_created_by'], dataArray['contact_updated_by'], dataArray['def_addr'], dataArray['def_lat'], dataArray['def_lng']])
                         .then(res => {
                             console.log("m_ContactDetails inserted");
                         })
@@ -234,17 +242,23 @@ subscription:any;
                         })
                     break;
                 case this.m_Lead_Master:
- 
-    //   var dataArray = {"lead_no": 1 ,"lead_company":this.dateTime , "name":this.whichtype, "branch":'' ,"source_type":'AB',"sub_source":'1',"last_action_date":this.locationDescription}
-
-                db.executeSql('INSERT OR REPLACE INTO ' + this.m_Lead_Master + ' (lead_no, lead_company, name , branch , source_type ,sub_source,last_action_date) VALUES (?,?,?,?,?,?,?)', [dataArray['lead_no'], dataArray['lead_company'],dataArray['name'], dataArray['branch'],dataArray['source_type'], dataArray['sub_source'],dataArray['last_action_date']])
+                    //   var dataArray = {"lead_no": 1 ,"lead_company":this.dateTime , "name":this.whichtype, "branch":'' ,"source_type":'AB',"sub_source":'1',"last_action_date":this.locationDescription}
+                    db.executeSql('INSERT OR REPLACE INTO ' + this.m_Lead_Master + ' (lead_no, lead_company, name , branch , source_type ,sub_source,last_action_date , lead_status_code , lead_status) VALUES (?,?,?,?,?,?,?,?,?)', [dataArray['lead_no'], dataArray['lead_company'], dataArray['name'], dataArray['branch'], dataArray['source_type'], dataArray['sub_source'], dataArray['last_action_date'], dataArray['lead_status_code'], dataArray['lead_status']])
                         .then(res => {
                             console.log("m_Lead_Master inserted");
                         })
                     break;
+                case this.m_Add_Project:
+                    //   var dataArray = {"lead_no": 1 ,"lead_company":this.dateTime , "name":this.whichtype, "branch":'' ,"source_type":'AB',"sub_source":'1',"last_action_date":this.locationDescription}
+                    db.executeSql('INSERT OR REPLACE INTO ' + this.m_Add_Project + ' (emp_id, builder_group, project_name , developer_name ,source_name , source_id ,project_location, project_lat , project_lng , total_unit ,avg_val_unit ,project_status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)', [dataArray['emp_id'], dataArray['builder_group'], dataArray['project_name'], dataArray['developer_name'], dataArray['source_name'], dataArray['source_id'], dataArray['project_location'], dataArray['project_lat'], dataArray['project_lng'], dataArray['total_unit'], dataArray['avg_val_unit'], dataArray['project_status']])
+                        .then(res => {
+                            console.log("m_Add_Project inserted");
+                        })
+                    break;
+                // project_id integer, builder_group TEXT , project_name TEXT , developer_name TEXT , source_id integer , project_location TEXT , project_lat TEXT  , project_lng TEXT , total_unit TEXT , avg_val_unit TEXT, project_status TEXT
                 case this.m_Goals_Master:
                     //  var dataArray = {"goal_id": 1 ,"user_id":this.dateTime , "source_name":this.whichtype, "goal_title":this.meetingPerson ,"goal_description":'AB',"tasks":'1',"escalated_to_manager":this.locationDescription,"goal_deadline":this.dateTime,"achieved_status":'1',"remarks":'',"source_active":'',"created_on":this.dateTime,"updated_on":'1'}
-                    db.executeSql('INSERT OR REPLACE INTO ' + this.m_Goals_Master + ' (goal_id, user_id , so_id, goal_title ,goal_description, tasks ,escalated_to_manager, goal_deadline ,achieved_status, remarks ,created_on, updated_on) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)', [dataArray['goal_id'], dataArray['user_id'] ,dataArray['so_id'], dataArray['goal_title'] ,dataArray['goal_description'], dataArray['tasks'],dataArray['escalated_to_manager'], dataArray['goal_deadline'],dataArray['achieved_status'], dataArray['remarks'],dataArray['created_on'], dataArray['updated_on']])
+                    db.executeSql('INSERT OR REPLACE INTO ' + this.m_Goals_Master + ' (goal_id, user_id , so_id, goal_title ,goal_description, tasks ,escalated_to_manager, goal_deadline ,achieved_status, remarks ,created_on, updated_on) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)', [dataArray['goal_id'], dataArray['user_id'], dataArray['so_id'], dataArray['goal_title'], dataArray['goal_description'], dataArray['tasks'], dataArray['escalated_to_manager'], dataArray['goal_deadline'], dataArray['achieved_status'], dataArray['remarks'], dataArray['created_on'], dataArray['updated_on']])
                         .then(res => {
                             console.log("m_Goals_Master inserted");
                         })
@@ -293,7 +307,7 @@ subscription:any;
                     break;
                 case this.m_Notifications:
                     //  var dataArray = {"notification_id": 1 ,"notification_from":this.dateTime , "notification_to":this.whichtype, "notification_redirect_url":this.meetingPerson ,"notification_title":'AB',"notification_descripiton":'AB',"notification_is_unread":'AB',"notification_created_on":'AB',"notification_updated_on":''}
-                    db.executeSql('INSERT OR REPLACE INTO ' + this.m_Notifications + ' (notification_id, notification_from ,notification_to, notification_redirect_url ,notification_title, notification_descripiton ,notification_is_unread, notification_created_on ,notification_updated_on ,notification_isread , notification_activitytype ,notification_scheduled_type) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)', [dataArray['notification_id'], dataArray['notification_from'], dataArray['notification_to'], dataArray['notification_redirect_url'], dataArray['notification_title'], dataArray['notification_descripiton'], dataArray['notification_is_unread'], dataArray['notification_created_on'], dataArray['notification_updated_on'] , dataArray['notification_isread'] , dataArray['notification_activitytype'] , dataArray['notification_scheduled_type'] ])
+                    db.executeSql('INSERT OR REPLACE INTO ' + this.m_Notifications + ' (notification_id, notification_from ,notification_to, notification_redirect_url ,notification_title, notification_descripiton ,notification_is_unread, notification_created_on ,notification_updated_on ,notification_isread , notification_activitytype ,notification_scheduled_type) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)', [dataArray['notification_id'], dataArray['notification_from'], dataArray['notification_to'], dataArray['notification_redirect_url'], dataArray['notification_title'], dataArray['notification_descripiton'], dataArray['notification_is_unread'], dataArray['notification_created_on'], dataArray['notification_updated_on'], dataArray['notification_isread'], dataArray['notification_activitytype'], dataArray['notification_scheduled_type']])
                         .then(res => {
                             console.log("m_Notifications inserted");
                         })
@@ -369,7 +383,6 @@ subscription:any;
 
     public getDate(tobeFormat: String, dateFormat: string) {
         var datePipe = new DatePipe('en-US');
-        // formattedDate = datePipe.transform(tobeFormat, 'dd/MM/yyyy');
         return datePipe.transform(tobeFormat, dateFormat);
     }
 
@@ -432,7 +445,7 @@ subscription:any;
             this.typesarray = data['MeetingType'];
             this.keys = Object.keys(this.typesarray);
 
-        }, error => console.log( JSON.stringify("aa" + error)));
+        }, error => console.log(JSON.stringify("aa" + error)));
 
         this.getsubsrcjson(http).subscribe(data => {
             var keyArray1: string[] = [];
@@ -491,22 +504,146 @@ subscription:any;
 
     locationConfirm() {
         let alert = this.alertCtrl.create({
-          title: 'Logout',
-          message: 'First enable location to continue with app.',
-          buttons: [
-            {
-              text: 'OPEN',
-              handler: () => {
-                this.openNativeSetting.open('location');
-                console.log('Confirm clicked');
-              }
-            }
-          ]
+            title: 'Logout',
+            message: 'First enable location to continue with app.',
+            buttons: [
+                {
+                    text: 'OPEN',
+                    handler: () => {
+                        this.openNativeSetting.open('location');
+                        console.log('Confirm clicked');
+                    }
+                }
+            ]
         });
         alert.present();
-      }
+    }
+
+    presentActionSheet() {
+        let actionSheet = this.actionSheetCtrl.create({
+            title: 'Modify your album',
+            buttons: [
+                {
+                    text: 'Destructive',
+                    role: 'destructive',
+                    handler: () => {
+                        console.log('Destructive clicked');
+                    }
+                },
+                {
+                    text: 'Archive',
+                    handler: () => {
+                        console.log('Archive clicked');
+                    }
+                },
+                {
+                    text: 'Cancel',
+                    role: 'cancel',
+                    handler: () => {
+                        console.log('Cancel clicked');
+                    }
+                }
+            ]
+        });
+
+        actionSheet.present();
+    }
 
 
+    dataFromServices() {
+
+        this.storage.get('token').then((val) => {
+
+            this.storage.get('empid').then((val1) => {
+
+                this.deleteTable(this.m_Source_Master);
+                this.deleteTable(this.m_Lead_Master);
+                this.deleteTable(this.m_Goals_Master);
+                this.deleteTable(this.m_Activities);
+                this.deleteTable(this.m_ContactDetails);
+                this.deleteTable(this.m_Add_Project);
+                this.deleteTable(this.m_Notifications);
+
+                setTimeout(() => {
+                   
+                    let seq = this.api.get('getSources/' + val1, '', { 'Authorizations': val}).share();
+                    let seq1 = this.api.get('getLeads/' + val1, '', { 'Authorizations': val }).share();
+                    let seq2 = this.api.get('goallist/' + val1, '', { 'Authorizations':  val}).share();
+                    let seq3 = this.api.get('getActivity/' + val1, '', { 'Authorizations':  val}).share();
+                    let seq4 = this.api.get('getContacts/' + val1, '', { 'Authorizations': val }).share();
+                    let seq5 = this.api.get('getProject/' + val1, '', { 'Authorizations': val }).share();
+                    let seq6 = this.api.get('getNotifications/' + val1, '', { 'Authorizations':  val}).share();
+    
+                    forkJoin([seq, seq1, seq2, seq3, seq4, seq5 , seq6]).subscribe(results => {
+    
+
+                        if (results[3]['items'].length > 0) {
+                            for (let i = 0; i < results[3]['items'].length; i++) {
+                                var dataArray3 = {
+                                    "activity_date_time": results[3]['items'][i]['activity_date_time'], "activity_type": results[3]['items'][i]['activity_type'], "activity_person_name": results[3]['items'][i]['activity_person_name'], "activity_scheduled_type": results[3]['items'][i]['activity_scheduled_type'], "activity_ref_id": results[3]['items'][i]['activity_ref_id'], "activity_location": results[3]['items'][i]['activity_location'], "activity_latitude": results[3]['items'][i]['activity_latitude'], "activity_longitude": results[3]['items'][i]['activity_longitude'], "activity_city": results[3]['items'][i]['activity_city'], "current_lat": results[3]['items'][i]['current_lat'], "current_lng": results[3]['items'][i]['current_lng'], "current_loc": results[3]['items'][i]['current_loc'], "activity_description": results[3]['items'][i]['activity_description'], "activity_status": results[3]['items'][i]['activity_status'], "activity_output_type": results[3]['items'][i]['activity_output_type'], "activity_output_remarks": results[3]['items'][i]['activity_output_remarks'], "activity_output_end_datetime": results[3]['items'][i]['activity_output_end_datetime'], "next_activity_id": results[3]['items'][i]['next_activity_id'], "activity_created_on": results[3]['items'][i]['activity_created_on'], "activity_updated_on": results[3]['items'][i]['activity_updated_on'], "activity_created_by": results[3]['items'][i]['activity_created_by'], "activity_updated_by": results[3]['items'][i]['activity_updated_by'],
+                                    "client_id": results[3]['items'][i]['client_id'],
+                                    "contact_id": results[3]['items'][i]['contact_id'],
+                                    "team_leader": results[3]['items'][i]['team_leader'],
+                                }
+                                this.updateTables('', this.m_Activities, dataArray3);
+                            }
+                        }
+
+                        if (results[0]['items'].length > 0) {
+                            for (let i = 0; i < results[0]['items'].length; i++) {
+                                var dataArray = { "source_id": results[0]['items'][i]['source_id'], "source_type": results[0]['items'][i]['source_type'], "source_sub_type": results[0]['items'][i]['source_sub_type'], "source_name": results[0]['items'][i]['source_name'], "source_address_1": results[0]['items'][i]['source_address_1'], "source_address_2": results[0]['items'][i]['source_address_2'], "source_address_3": results[0]['items'][i]['source_address_3'], "source_location": results[0]['items'][i]['source_location'], "source_city": results[0]['items'][i]['source_city'], "source_pincode": results[0]['items'][i]['source_pincode'], "source_active": results[0]['items'][i]['source_active'], "source_latitude": results[0]['items'][i]['source_latitude'], "source_longitude": results[0]['items'][i]['source_longitude'], "source_tel_number_1": results[0]['items'][i]['source_tel_number_1'], "source_tel_number_2": results[0]['items'][i]['source_tel_number_2'], "source_tel_number_3": results[0]['items'][i]['source_tel_number_3'], "source_created_on": results[0]['items'][i]['source_created_on'], "source_updated_on": results[0]['items'][i]['source_updated_on'], "source_created_by": results[0]['items'][i]['source_created_by'], "source_updated_by": results[0]['items'][i]['source_updated_by'] }
+                                this.updateTables('', this.m_Source_Master, dataArray);
+                            }
+                        }
+    
+                        if (results[1]['items'].length > 0) {
+                            for (let i = 0; i < results[1]['items'].length; i++) {
+                                var dataArray1 = { "lead_no": results[1]['items'][i]['lead_no'], "lead_company": results[1]['items'][i]['lead_company'], "name": results[1]['items'][i]['name'], "branch": results[1]['items'][i]['branch'], "source_type": results[1]['items'][i]['source_type'], "sub_source": results[1]['items'][i]['sub_source'], "last_action_date": results[1]['items'][i]['last_action_date'], "lead_status_code": results[1]['items'][i]['lead_status_code'], "lead_status": results[1]['items'][i]['lead_status'] }
+                                this.updateTables('', this.m_Lead_Master, dataArray1);
+                            }
+                        }
+    
+                        if (results[2]['items'].length > 0) {
+                            for (let i = 0; i < results[2]['items'].length; i++) {
+                                var dataArray2 = { "goal_id": results[2]['items'][i]['goal_id'], "user_id": results[2]['items'][i]['user_id'], "so_id": results[2]['items'][i]['so_id'], "goal_title": results[2]['items'][i]['goal_title'], "goal_description": results[2]['items'][i]['goal_description'], "tasks": results[2]['items'][i]['tasks'], "escalated_to_manager": results[2]['items'][i]['escalated_to_manager'], "goal_deadline": results[2]['items'][i]['goal_deadline'], "achieved_status": results[2]['items'][i]['achieved_status'], "remarks": results[2]['items'][i]['remarks'], "created_on": results[2]['items'][i]['created_on'], "updated_on": results[2]['items'][i]['updated_on'] }
+                                this.updateTables('', this.m_Goals_Master, dataArray2);
+                            }
+                        }
+    
+    
+    
+                        if (results[4]['items'].length > 0) {
+                            for (let i = 0; i < results[4]['items'].length; i++) {
+                                var dataArray4 = { "contact_name": results[4]['items'][i]['contact_name'], "contact_number_1": results[4]['items'][i]['contact_number_1'], "contact_number_2": results[4]['items'][i]['contact_number_2'], "contact_email_1": results[4]['items'][i]['contact_email_1'], "contact_email_2": results[4]['items'][i]['contact_email_2'], "contact_dob": results[4]['items'][i]['contact_dob'], "contact_created_on": results[4]['items'][i]['contact_created_on'], "contact_updated_on": results[4]['items'][i]['contact_updated_on'], "contact_created_by": results[4]['items'][i]['contact_created_by'], "contact_updated_by": results[4]['items'][i]['contact_updated_by'], "def_addr": results[4]['items'][i]['def_address'], "def_lat": results[4]['items'][i]['def_latitude'], "def_lng": results[4]['items'][i]['def_longitude'] }
+                                this.updateTables('', this.m_ContactDetails, dataArray4);
+                            }
+                        }
+    
+                        if (results[5]['items'].length > 0) {
+                            for (let i = 0; i < results[5]['items'].length; i++) {
+                                var dataArray5 = {"emp_id":results[5]['items'][i]['emp_id'] , "builder_group": results[5]['items'][i]['builder_group'], "project_name": results[5]['items'][i]['project_name'], "developer_name": results[5]['items'][i]['developer_name'], "source_name": results[5]['items'][i]['source_name'], "source_id": results[5]['items'][i]['source_id'], "project_location": results[5]['items'][i]['project_location'], "project_lat": results[5]['items'][i]['project_latitude'], "project_lng": results[5]['items'][i]['project_longitude'], "total_unit": results[5]['items'][i]['total_unit'], "avg_val_unit": results[5]['items'][i]['avg_val_unit'], "project_status": results[5]['items'][i]['project_status'] }
+                                this.updateTables('', this.m_Add_Project, dataArray5);
+                            }
+                        }
+
+                        // (notification_id, notification_from ,notification_to, notification_redirect_url ,notification_title, notification_descripiton ,notification_is_unread, notification_created_on ,notification_updated_on ,notification_isread , notification_activitytype ,notification_scheduled_type)
+
+
+                        if (results[6]['items'].length > 0) {
+                            for (let i = 0; i < results[6]['items'].length; i++) {
+                                var dataArray6 = {"notification_id":results[6]['items'][i]['notification_id'] , "notification_from": results[6]['items'][i]['notification_from'], "notification_to": results[6]['items'][i]['notification_to'], "notification_redirect_url": results[6]['items'][i]['notification_redirect_url'], "notification_title": results[6]['items'][i]['notification_title'], "notification_descripiton": results[6]['items'][i]['notification_descripiton'], "notification_is_unread": results[6]['items'][i]['notification_is_unread'], "notification_created_on": results[6]['items'][i]['notification_created_on'], "notification_updated_on": results[6]['items'][i]['notification_updated_on'], "notification_isread": results[6]['items'][i]['notification_isread'], "notification_activitytype": results[6]['items'][i]['notification_activitytype'], "notification_scheduled_type": results[6]['items'][i]['notification_scheduled_type'] }
+                                this.updateTables('', this.m_Notifications, dataArray6);
+                            }
+                        }
+
+    
+                    })
+
+                }, 200);
+            
+            })
+        })
+    }
 
 
 }

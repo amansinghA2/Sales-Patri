@@ -5,16 +5,16 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-    <ion-navbar hideBackButton color="purplecolor">
-        <ion-buttons start>
+    <ion-navbar  color="purplecolor">
+        <ion-buttons left>
             <button ion-button menuToggle>
                 <ion-icon name="menu"></ion-icon>
             </button>
         </ion-buttons>
-        <ion-title class="titlepadding" style="padding-top:2.5vh">
+        <ion-title  text-center>
             SOURCE INFO
         </ion-title>
-        <ion-buttons end>
+        <ion-buttons right>
             <header></header>
         </ion-buttons>
     </ion-navbar>
@@ -24,63 +24,155 @@
 <ion-content no-padding class="appbackcolor">
 
     <ion-card class="ioncardcss" padding>
-
-        <b class="infodatasize"> Details :</b>
+        <b class="infodatasizeheading"> Details :</b>
         <hr>
-
-        <ion-row>
-                <ion-col col-5>
-                    <b> NAME : </b>
-                </ion-col>
-                <ion-col col-7>
-                        {{item.source_name}}
-                </ion-col>
-            </ion-row>
-
-        <ion-row>
-                <ion-col col-5>
-                        <b> SOURCE ID : </b>
-                </ion-col>
-                <ion-col col-7>
-                        {{item.source_id}}
-                </ion-col>
-            </ion-row>
-
         <ion-row>
             <ion-col col-5>
-                    <b> SOURCE TYPE : </b>
+                <b> NAME : </b>
             </ion-col>
             <ion-col col-7>
-                    {{item.source_type}}
+                {{item.source_name}}
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col col-5>
+                <b> SOURCE ID : </b>
+            </ion-col>
+            <ion-col col-7>
+                {{item.source_id}}
             </ion-col>
         </ion-row>
 
         <ion-row>
             <ion-col col-5>
-                    <b> ADDRESS : </b>
+                <b> SOURCE TYPE : </b>
             </ion-col>
             <ion-col col-7>
-                    {{item.source_address_1}} {{item.source_address_2}} {{item.source_pincode}}
+                {{item.source_type}}
             </ion-col>
         </ion-row>
 
         <ion-row>
             <ion-col col-5>
-                    <b> CREATION DATE : </b>
+                <b> ADDRESS : </b>
             </ion-col>
             <ion-col col-7>
-                    {{item.source_created_on}}
+                {{item.source_address_1}} {{item.source_address_2}} {{item.source_pincode}}
             </ion-col>
         </ion-row>
 
         <ion-row>
             <ion-col col-5>
-                    <b> UPDATION DATE : </b>
+                <b> CREATION DATE : </b>
             </ion-col>
             <ion-col col-7>
-                    {{item.source_updated_on}}
+                {{item.source_created_on}}
             </ion-col>
         </ion-row>
+
+        <ion-row>
+            <ion-col col-5>
+                <b> UPDATION DATE : </b>
+            </ion-col>
+            <ion-col col-7>
+                {{item.source_updated_on}}
+            </ion-col>
+        </ion-row>
+        <br>
+        <hr>
+        <br>
+        <ion-row *ngIf="sourceActivityArray.length != 0">
+                <ion-row no-padding class="momheading">
+                        <ion-col col-11 (click)="nextCall()">
+                           <b> NEXT CALL : </b>    
+                        </ion-col>
+                        <ion-col col-1 (click)="nextCall()" text-right>
+                                <span *ngIf="isNextClick == false">
+                                        <i class="fas fa-plus fa-1xx"></i>
+                                </span>
+                                <span *ngIf="isNextClick == true">
+                                        <i class="fas fa-minus fa-1xx"></i>
+                                </span>
+                        </ion-col>
+                </ion-row>
+                <div *ngFor="let item of sourceActivityArray" style="width:100%">
+                        <div *ngIf="item['activity_output_end_datetime'] >= currenTime && isNextClick == true;
+                                        ">
+                                <div class="mominnerdiv">
+                                        <div class="infodatasize">
+                                                <ion-icon name="call"></ion-icon>
+                                                <b> CALL DATE/TIME : </b>
+                                                <br>
+                                                <div text-center class="infodatasize">{{item.activity_output_end_datetime}}</div>
+                                        </div>
+                                        <div class="infodatasize">
+                                                <ion-icon name="person"></ion-icon>
+                                                <b> PERSON: </b>
+                                                <br>
+                                                <div text-center class="infodatasize">{{item.activity_person_name}}</div>
+                                        </div>
+                                        <div class="infodatasize">
+                                                <ion-icon name="archive"></ion-icon>
+                                                <b> OBJECTIVE: </b>
+                                                <br>
+                                                <div text-center class="infodatasize">{{item.activity_person_name}}</div>
+                                        </div>
+
+                                        <div class="infodatasize">
+                                                <ion-icon name="logo-playstation"></ion-icon>
+                                                <b> DESCRIPTION: </b>
+                                                <br>
+                                                <div text-center class="infodatasize">{{item.activity_description}}</div>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+                <ion-row no-padding class="momheadingbottom">
+                        <ion-col col-11 (click)="prevCall()">
+                              <b>  PREV CALL MOM : </b> 
+                        </ion-col>
+                        <ion-col col-1 (click)="prevCall()" text-center >
+                                <span *ngIf="isPrevClick == false">
+                                        <i class="fas fa-plus fa-1xx"></i>
+                                </span>
+                                <span *ngIf="isPrevClick == true">
+                                        <i class="fas fa-minus fa-1xx"></i>
+                                </span>
+                        </ion-col>
+                </ion-row>
+                <div *ngFor="let item of sourceActivityArray"  style="width:100%">
+                        <div *ngIf="item['activity_output_end_datetime'] < currenTime && isPrevClick == true;">
+                                <div class="mominnerdiv">
+                                        <div class="infodatasize">
+                                                <ion-icon name="call"></ion-icon>
+                                                <b> CALL DATE/TIME : </b>
+                                                <br>
+                                                <div text-center class="infodatasize">{{item.activity_output_end_datetime}}</div>
+                                        </div>
+                                        <div class="infodatasize">
+                                                <ion-icon name="person"></ion-icon>
+                                                <b> PERSON: </b>
+                                                <br>
+                                                <div text-center class="infodatasize">{{item.activity_person_name}}</div>
+                                        </div>
+                                        <div class="infodatasize">
+                                                <ion-icon name="archive"></ion-icon>
+                                                <b> OBJECTIVE: </b>
+                                                <br>
+                                                <div text-center class="infodatasize">{{item.activity_person_name}}</div>
+                                        </div>
+
+                                        <div class="infodatasize">
+                                                <ion-icon name="logo-playstation"></ion-icon>
+                                                <b> DESCRIPTION: </b>
+                                                <br>
+                                                <div text-center class="infodatasize">{{item.activity_description}}</div>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+        </ion-row>
+
 
     </ion-card>
 

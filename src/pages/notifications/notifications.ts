@@ -3,8 +3,6 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Globals } from '../../app/globals';
 import { SQLiteObject, SQLite } from '@ionic-native/sqlite';
-
-
 /**
  * Generated class for the NotificationsPage page.
  *
@@ -30,12 +28,9 @@ export class NotificationsPage {
 
     this.globals.setStorage('isseennotification' , 'false');
    
-
     setTimeout(() => {
 
       for(let i = 0 ; i < this.notificationList.length ; i++){
-
-
         this.sqlite.create({
           name: this.globals.dbName,
           location: 'default'
@@ -47,10 +42,8 @@ export class NotificationsPage {
 
       })
 
-        // 'notification_isread':'0'  , 'notification_activitytype': 'Meeting'
       }
 
-      console.log(JSON.stringify(this.notificationList));
     }, 500);
 
   }
@@ -58,10 +51,6 @@ export class NotificationsPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad NotificationsPage');
   }
-
-  // showNotifications(){
-  //   this.navCtrl.push(NotificationsPage);
-  // }
 
 
 }

@@ -8,7 +8,6 @@ import { TodoitemPage } from './../todoitem/todoitem';
 import { Storage } from '@ionic/storage';
 import { NotificationsPage } from './../notifications/notifications';
 
-
 /**
  * Generated class for the MeetingupdatePage page.
  *
@@ -35,7 +34,7 @@ export class MeetingupdatePage {
   whichtypeArray = ["L" , "F" , "D" , "G"  , "S"  , "Q"];
   item:any;
   changecolor:any;
-  cancellingReasons = ['Not well' , 'Need Help' , 'Option 3']
+  cancellingReasons = ['Not well' , 'Need Help' , 'Lost to competitor']
   descriptiontext = '';
   notificationList:any;
   
