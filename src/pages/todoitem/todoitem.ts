@@ -130,9 +130,13 @@ export class TodoitemPage {
 
   fromDateData() {
     this.selectedDate = moment.utc(this.myDate).local().format('YYYY-MM-DD');
+<<<<<<< HEAD
     // this.dateTime = moment.utc(this.myDate).local().format('YYYY-MM-DD') + " " + moment.utc(this.myTime).local().format('HH:mm');
     this.dateTime = moment.utc(this.myDate).local().format('YYYY-MM-DDT') + moment.utc(this.myTime).local().format('HH:mm:ssZ');
 
+=======
+    this.dateTime = this.globals.getDate(this.myDate, 'dd/MM/yyyy') + "    " + this.globals.getDate(this.myTime, 'HH:mm');
+>>>>>>> 31ca1165e25ea9d073fc438ccb9b79fa9441d40c
     this.pushDateString = moment.utc(this.myDate).local().format('YYYY-MM-DDT') + moment.utc(this.myTime).local().format('HH:mm:ssZ');
   }
 

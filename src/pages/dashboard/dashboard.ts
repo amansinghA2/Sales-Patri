@@ -21,6 +21,10 @@ export class DashboardPage implements OnInit {
   tab1: any;
   tab2: any;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 31ca1165e25ea9d073fc438ccb9b79fa9441d40c
   recordsArray = [];
   totalArray = [];
   recordsList = [];
@@ -55,6 +59,7 @@ export class DashboardPage implements OnInit {
   ngOnInit() {
 
     this.notificationFunction();
+<<<<<<< HEAD
 
     this.clickList = [
       { pgn: 0, icon: 'fas fa-universal-access fa-1xx', title: 'All', color: 'black', count: 0 },
@@ -70,6 +75,24 @@ export class DashboardPage implements OnInit {
     this.myDateTo = moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ');
 
     this.setmyDateFrom = moment.utc().local().format('YYYY-MM-DD');  
+=======
+
+    this.clickList = [
+      { pgn: 0, icon: 'fas fa-universal-access fa-1xx', title: 'All', color: 'black', count: 0 },
+      { pgn: 1, icon: 'fas fa-handshake fa-1xx', title: 'Meetings', color: 'gray', count: 0 },
+      { pgn: 2, icon: 'fas fa-mobile-alt fa-1xx', title: 'Calls', color: 'gray', count: 0 },
+      { pgn: 3, icon: 'fas fa-list-ol fa-1xx', title: 'To Do', color: 'gray', count: 0 },
+      { pgn: 4, icon: 'fas fa-edit fa-1xx', title: 'Pending', color: 'gray', count: 0 }
+    ];
+
+    this.options = "myschedule";
+
+    this.myDateFrom = moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ');
+    this.myDateTo = moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ');
+
+
+    this.setmyDateFrom = moment.utc().local().format('YYYY-MM-DD');   // this.globals.getDate(this.myDateFrom, 'dd/MM/yyyy');
+>>>>>>> 31ca1165e25ea9d073fc438ccb9b79fa9441d40c
     this.setmyDateTo = moment.utc().local().format('YYYY-MM-DD');
 
     Observable.interval(1000 * 5).subscribe(x => {
@@ -98,6 +121,11 @@ export class DashboardPage implements OnInit {
     }
     this.selectQuery(list.pgn);
   }
+<<<<<<< HEAD
+=======
+
+  selectQuery(list) {
+>>>>>>> 31ca1165e25ea9d073fc438ccb9b79fa9441d40c
 
   selectQuery(list) {
 
@@ -137,7 +165,11 @@ export class DashboardPage implements OnInit {
 
   countDataFunction() {
 
+<<<<<<< HEAD
     this.currenTime = moment.utc().local().format('YYYY-MM-DDT') +  moment.utc().local().format('HH:mm:ssZ');
+=======
+    this.currenTime = this.globals.getDate(moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ'), 'dd/MM/yyyy') + "    " + this.globals.getDate(moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ'), 'HH:mm');
+>>>>>>> 31ca1165e25ea9d073fc438ccb9b79fa9441d40c
 
     this.recordsList = this.recordsArray;
     this.totalRecords = this.totalArray;
@@ -191,7 +223,11 @@ export class DashboardPage implements OnInit {
   }
 
   fromDateData() {
+<<<<<<< HEAD
     this.setmyDateFrom = moment.utc(this.myDateFrom).local().format('YYYY-MM-DD');   
+=======
+    this.setmyDateFrom = moment.utc(this.myDateFrom).local().format('YYYY-MM-DD');   //this.globals.getDate(this.myDateFrom, 'dd/MM/yyyy');
+>>>>>>> 31ca1165e25ea9d073fc438ccb9b79fa9441d40c
     if (this.setmyDateFrom > this.setmyDateTo) {
       this.myDateTo = this.myDateFrom;
     }
@@ -213,6 +249,10 @@ export class DashboardPage implements OnInit {
         this.isnotificationseen = val;
       })
 
+<<<<<<< HEAD
+=======
+      console.log(JSON.stringify(this.notificationList));
+>>>>>>> 31ca1165e25ea9d073fc438ccb9b79fa9441d40c
 
       for (let i = 0; i < this.notificationList.length; i++) {
         // this.notificationList[i]['notification_isread'] == '1';

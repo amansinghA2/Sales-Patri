@@ -194,6 +194,24 @@ export class MapPage {
 
   loadMap() {
 
+
+    // this.latLng = new google.maps.LatLng(18.9403, 72.8353);
+
+    // let mapOptions = {
+    //   center: this.latLng,
+    //   zoom: 12,
+    //   mapTypeId: google.maps.MapTypeId.ROADMAP
+    // }
+
+    // this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+
+    // this.map.getMyLocation().then(res => {
+    //   console.log('Give it to me' +  res.latLng);
+
+    // });
+
+    // this.addMarker();
+
     this.geolocation.getCurrentPosition().then((position) => {
 
       this.latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -242,6 +260,7 @@ export class MapPage {
         });
 
 
+<<<<<<< HEAD
         if (this.pendingscheduled == 0) {
           if (this.recordsList[i]['activity_output_end_datetime'] > this.currenTime) {
             this.marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
@@ -270,6 +289,20 @@ export class MapPage {
       for (var i = 0; i < this.sourceListArray.length; i++) {
 
         this.marker = new google.maps.Marker({
+=======
+     
+      // let mapOptions = {
+      //   center: new google.maps.LatLng(18.9403, 72.8353),
+      //   zoom: 12,
+      //   mapTypeId: google.maps.MapTypeId.ROADMAP
+      // }
+  
+      // this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+
+      for (var i = 0; i < this.recordsList.length; i++) {
+
+        let marker = new google.maps.Marker({
+>>>>>>> 31ca1165e25ea9d073fc438ccb9b79fa9441d40c
           map: this.map,
           // icon:'assets/imgs/flag.png', 
           label: {
@@ -284,9 +317,15 @@ export class MapPage {
           position: { lat: +this.sourceListArray[i]['source_latitude'], lng: +this.sourceListArray[i]['source_longitude'] }
         });
 
+<<<<<<< HEAD
         let content = '<div id="contentname">' + "Source Name : " + this.sourceListArray[i]['source_name'] + '</div>'
         this.addInfoWindow(this.marker, content);
         // this.calculateAndDisplayRoute(this.directionsService, this.directionsDisplay , this.sourceListArray[i]);
+=======
+      
+        let content = '<div id="contentname">' + "Client Name : " + this.recordsList[i]['activity_person_name'] + '</div><div id="contentlocation">' + "Meeting time : " + this.recordsList[i]['activity_output_end_datetime'] + '</div>'
+        this.addInfoWindow(marker, content);
+>>>>>>> 31ca1165e25ea9d073fc438ccb9b79fa9441d40c
       }
 
     }

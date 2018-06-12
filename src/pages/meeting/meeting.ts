@@ -120,7 +120,11 @@ export class MeetingPage {
     this.myDate = moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ');
     this.myTime = moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ');
 
+<<<<<<< HEAD
     this.selectedDate = moment.utc().local().format('YYYY-MM-DD');
+=======
+    this.selectedDate = moment.utc().local().format('YYYY-MM-DD');    //this.globals.getDate(this.myDate, 'dd/MM/yyyy')
+>>>>>>> 31ca1165e25ea9d073fc438ccb9b79fa9441d40c
     this.selectedTime = moment.utc().local().format('hh:mm a');
 
     this.dateTime = moment.utc(this.myDate).local().format('YYYY-MM-DDT') + moment.utc(this.myTime).local().format('HH:mm:ssZ');
@@ -455,9 +459,14 @@ export class MeetingPage {
   // }
 
   fromDateData() {
+<<<<<<< HEAD
     this.selectedDate = moment.utc(this.myDate).local().format('YYYY-MM-DD');
     // this.dateTime = moment.utc(this.myDate).local().format('YYYY-MM-DD') + " " + moment.utc(this.myTime).local().format('HH:mm');
     this.dateTime = moment.utc(this.myDate).local().format('YYYY-MM-DDT') + moment.utc(this.myTime).local().format('HH:mm:ssZ');
+=======
+    this.selectedDate =  moment.utc(this.myDate).local().format('YYYY-MM-DD');  //this.globals.getDate(this.myDate, 'dd/MM/yyyy')
+    this.dateTime = this.globals.getDate(this.myDate, 'dd/MM/yyyy') + "    " + this.globals.getDate(this.myTime, 'HH:mm');
+>>>>>>> 31ca1165e25ea9d073fc438ccb9b79fa9441d40c
     this.pushDateString = moment.utc(this.myDate).local().format('YYYY-MM-DDT') + moment.utc(this.myTime).local().format('HH:mm:ssZ');
   }
 

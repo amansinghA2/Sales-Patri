@@ -7,6 +7,10 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { User } from '../../providers/user/user';
 import moment from 'moment';
+<<<<<<< HEAD
+=======
+import {Observable} from 'rxjs/Rx';
+>>>>>>> 31ca1165e25ea9d073fc438ccb9b79fa9441d40c
 
 /**
  * Generated class for the GoalsPage page.
@@ -28,10 +32,21 @@ export class GoalsPage implements OnInit{
   goalsListArray = [];
   selectedgoalsListArray = [];
 
+<<<<<<< HEAD
 
   myDateFrom: string;
   myDateTo: string;
 
+=======
+  myDate:any;
+  myTime:any;
+
+  myDateFrom: String;
+  myDateTo: String;
+
+  setmyDateFrom: string;
+  setmyDateTo: string;
+>>>>>>> 31ca1165e25ea9d073fc438ccb9b79fa9441d40c
 
   constructor(public navCtrl: NavController, public navParams: NavParams,public user:User,public storage:Storage , public globals:Globals) {
 
@@ -52,11 +67,27 @@ export class GoalsPage implements OnInit{
 
   ngOnInit(){
 
+<<<<<<< HEAD
     this.myDateFrom =  moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ');
     this.myDateTo =  moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ');
 
     this.myDateFrom = moment.utc(this.myDateFrom).local().format('YYYY-MM-DD');
     this.myDateTo = moment.utc(this.myDateTo).local().format('YYYY-MM-DD');
+=======
+    this.myDateFrom = new Date().toISOString();
+    this.myDateTo = new Date().toISOString();
+    // this.minDate = new Date().toISOString();
+
+    this.myDate = moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ');
+    this.myTime = moment.utc().local().format('YYYY-MM-DDTHH:mm:ssZ');
+
+    var send_date=new Date();
+    send_date.setMonth(send_date.getMonth() - 2 );
+    this.myDateFrom = send_date.toISOString().slice(0,10);
+    this.myDateFrom  =this.globals.getDate( this.myDateFrom , 'yyyy-MM-dd');
+    this.setmyDateFrom = this.globals.getDate( this.myDateFrom , 'yyyy-MM-dd');
+    this.setmyDateTo = this.globals.getDate(this.myDateTo, 'yyyy-MM-dd');
+>>>>>>> 31ca1165e25ea9d073fc438ccb9b79fa9441d40c
 
     this.selectQuery();
 
@@ -112,27 +143,44 @@ export class GoalsPage implements OnInit{
   }
 
   fromDateData() {
+<<<<<<< HEAD
     this.myDateFrom =  moment.utc(this.myDateFrom).local().format('YYYY-MM-DD');
     if(this.myDateFrom > this.myDateTo){
+=======
+    this.setmyDateFrom = this.globals.getDate(this.myDateFrom, 'yyyy-MM-dd');
+    if(this.setmyDateFrom > this.setmyDateTo){
+>>>>>>> 31ca1165e25ea9d073fc438ccb9b79fa9441d40c
       this.myDateTo = this.myDateFrom;
     }
     this.selectQuery();
   }
 
   toDateData() {
+<<<<<<< HEAD
     this.myDateTo =  moment.utc(this.myDateTo).local().format('YYYY-MM-DD');
+=======
+    this.setmyDateTo = this.globals.getDate(this.myDateTo, 'yyyy-MM-dd');
+>>>>>>> 31ca1165e25ea9d073fc438ccb9b79fa9441d40c
     this.selectQuery();
   }
 
 
   selectQuery() {
 
+<<<<<<< HEAD
     var sql = 'SELECT * from ' + this.globals.m_Goals_Master + " where goal_deadline >= '" + this.myDateFrom + "' and goal_deadline <= '" + this.myDateTo + "' ORDER BY goal_deadline ASC ;";
+=======
+    var sql = 'SELECT * from ' + this.globals.m_Goals_Master + " where goal_deadline >= '" + this.setmyDateFrom + "' and goal_deadline <= '" + this.setmyDateTo + "' ORDER BY goal_deadline ASC ;";
+>>>>>>> 31ca1165e25ea9d073fc438ccb9b79fa9441d40c
     this.goalsListArray = this.globals.selectTables(sql);
 
     setTimeout(() => {
         this.selectedgoalsListArray = this.goalsListArray;
+<<<<<<< HEAD
     }, 200);
+=======
+    }, 100);
+>>>>>>> 31ca1165e25ea9d073fc438ccb9b79fa9441d40c
 
   }
 }

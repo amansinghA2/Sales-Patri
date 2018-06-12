@@ -103,9 +103,12 @@ export class Globals {
 
             db.executeSql('CREATE TABLE IF NOT EXISTS ' + this.m_Lead_Master
                 + ' (id integer primary key AUTOINCREMENT, lead_no integer, lead_company TEXT , name TEXT , branch TEXT , source_type TEXT , sub_source TEXT , last_action_date TEXT , lead_status_code TEXT, lead_status TEXT)', {})
+<<<<<<< HEAD
 
             db.executeSql('CREATE TABLE IF NOT EXISTS ' + this.m_Add_Project
                 + ' (id integer primary key AUTOINCREMENT,emp_id integer, builder_group TEXT , project_name TEXT , developer_name TEXT ,source_name TEXT , source_id integer , project_location TEXT , project_lat TEXT  , project_lng TEXT , total_unit TEXT , avg_val_unit TEXT, project_status TEXT)', {})
+=======
+>>>>>>> 31ca1165e25ea9d073fc438ccb9b79fa9441d40c
 
             db.executeSql('CREATE TABLE IF NOT EXISTS ' + this.m_Goals_Master
                 + ' (id integer primary key AUTOINCREMENT, goal_id integer, user_id integer , so_id integer , goal_title TEXT , goal_description TEXT , tasks TEXT , escalated_to_manager TEXT , goal_deadline TEXT , achieved_status TEXT , remarks TEXT , created_on TEXT , updated_on TEXT)', {})
@@ -242,8 +245,15 @@ export class Globals {
                         })
                     break;
                 case this.m_Lead_Master:
+<<<<<<< HEAD
                     //   var dataArray = {"lead_no": 1 ,"lead_company":this.dateTime , "name":this.whichtype, "branch":'' ,"source_type":'AB',"sub_source":'1',"last_action_date":this.locationDescription}
                     db.executeSql('INSERT OR REPLACE INTO ' + this.m_Lead_Master + ' (lead_no, lead_company, name , branch , source_type ,sub_source,last_action_date , lead_status_code , lead_status) VALUES (?,?,?,?,?,?,?,?,?)', [dataArray['lead_no'], dataArray['lead_company'], dataArray['name'], dataArray['branch'], dataArray['source_type'], dataArray['sub_source'], dataArray['last_action_date'], dataArray['lead_status_code'], dataArray['lead_status']])
+=======
+ 
+    //   var dataArray = {"lead_no": 1 ,"lead_company":this.dateTime , "name":this.whichtype, "branch":'' ,"source_type":'AB',"sub_source":'1',"last_action_date":this.locationDescription}
+
+                db.executeSql('INSERT OR REPLACE INTO ' + this.m_Lead_Master + ' (lead_no, lead_company, name , branch , source_type ,sub_source,last_action_date , lead_status_code , lead_status) VALUES (?,?,?,?,?,?,?,?,?)', [dataArray['lead_no'], dataArray['lead_company'],dataArray['name'], dataArray['branch'],dataArray['source_type'], dataArray['sub_source'],dataArray['last_action_date'] , dataArray['lead_status_code'] , dataArray['lead_status'] ])
+>>>>>>> 31ca1165e25ea9d073fc438ccb9b79fa9441d40c
                         .then(res => {
                             console.log("m_Lead_Master inserted");
                         })

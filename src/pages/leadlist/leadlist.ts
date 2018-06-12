@@ -120,7 +120,11 @@ export class LeadlistPage {
 
     setTimeout(() => {
       this.selectedLeadLIstArray = this.leadListArray;
+<<<<<<< HEAD
     }, 200);
+=======
+    }, 100);
+>>>>>>> 31ca1165e25ea9d073fc438ccb9b79fa9441d40c
 
   }
 
